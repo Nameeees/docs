@@ -1,0 +1,141 @@
+---
+title: "Shards and Runes: Socketable Pickaxe Boosts"
+sidebarTitle: "Shards & Runes"
+description: "Socket shards and runes into your pickaxe to gain passive boosts — XP, sell rate, luck, speed, and more. Slots unlock progressively as your pickaxe levels up."
+---
+
+Shards and runes are socketable items that insert directly into your pickaxe to provide passive bonuses while you mine. They differ in rarity and power — **shards** are the base tier and easier to obtain, while **runes** are the upgraded tier offering stronger effects. Both use the same socket system, so the same slots accept either type.
+
+## Effect Types
+
+There are **13 effect types** available across shards and runes:
+
+| Effect | Description |
+|---|---|
+| XP | Boosts pickaxe XP earned per block |
+| Sell | Increases the sell price multiplier for mined blocks |
+| Rewards | Boosts all economy rewards across every currency |
+| Luck | Increases the chance of rare drops and loot chest spawns |
+| Speed | Increases your mining speed while holding the pickaxe |
+| Cost | Reduces the currency cost of pickaxe upgrades |
+| Fortune | Amplifies fortune enchantment drop rates |
+| Tokens | Provides a direct bonus to token earnings |
+| Money | Provides a direct bonus to money earnings |
+| Gems | Provides a direct bonus to gem earnings |
+| Prestige | Boosts XP and rewards earned during prestige runs |
+| Defense | Reduces incoming damage while mining in the prison |
+| Combo | Extends the Momentum combo reset timeout |
+
+## Shard vs Rune
+
+| | Shard | Rune |
+|---|---|---|
+| **Tier** | Base | Upgraded |
+| **Power** | Standard boost values | Higher boost values |
+| **Availability** | More common | Rarer, higher-tier drops |
+| **Socket system** | Shared slot | Shared slot |
+
+Both types are socketed the same way and occupy the same slot type — the difference is purely in how strong the effect is.
+
+## Socket Slots
+
+Each pickaxe starts with a **limited number of open socket slots**. Additional slots unlock as your pickaxe reaches higher levels and as you complete prestige tiers. This means the most powerful socket configurations are only available to deeply invested players.
+
+Slot progression thresholds are configured in `config.yml` under the `sockets` section.
+
+<Info>
+  Socketed items are consumed when inserted — plan your loadout carefully before socketing high-tier runes, since you cannot un-socket them without losing the item.
+</Info>
+
+## Socketing
+
+To socket a shard or rune into your pickaxe:
+
+1. Hold the shard or rune item in your hand
+2. **Right-click** with it
+3. It automatically inserts into the first available open socket on your active pickaxe
+
+The pickaxe's lore updates immediately to reflect the new socketed effect and its current boost value.
+
+<Tip>
+  Stack complementary effects for maximum efficiency. Pairing a Sell rune with a Rewards rune and a Luck shard gives you higher earnings, better economy multipliers, and more rare drops all at once.
+</Tip>
+
+## Admin Giving
+
+Admins can give shards and runes directly to players using the following commands:
+
+```
+/jpprison shard give <player> <shard-id> [count]
+/jpprison rune give <player> <rune-id> [count]
+```
+
+**Examples:**
+
+```
+# Give Steve 3 power shards
+/jpprison shard give Steve power-shard 3
+
+# Give Steve 1 sell rune
+/jpprison rune give Steve sell-rune 1
+
+# Give Steve 5 luck shards (count defaults to 1 if omitted)
+/jpprison shard give Steve luck-shard 5
+```
+
+## Configuration
+
+Edit the following files to define shard and rune types, set effect values, and configure slot unlocks:
+
+| File | Purpose |
+|---|---|
+| `plugins/JPPrison/shards.yml` | Define shard types, effect types, and boost values |
+| `plugins/JPPrison/runes.yml` | Define rune types, effect types, and boost values |
+| `plugins/JPPrison/config.yml` | Socket slot unlock thresholds by pickaxe level and prestige |
+
+```yaml
+# Example shards.yml snippet
+shards:
+  power-shard:
+    display-name: "&cPower Shard"
+    effect: XP
+    boost: 0.10
+    material: NETHER_STAR
+
+  luck-shard:
+    display-name: "&aLuck Shard"
+    effect: LUCK
+    boost: 0.08
+    material: EMERALD
+```
+
+```yaml
+# Example runes.yml snippet
+runes:
+  sell-rune:
+    display-name: "&6Sell Rune"
+    effect: SELL
+    boost: 0.20
+    material: GOLD_INGOT
+
+  prestige-rune:
+    display-name: "&dPrestige Rune"
+    effect: PRESTIGE
+    boost: 0.15
+    material: AMETHYST_SHARD
+```
+
+```yaml
+# Example config.yml socket section
+sockets:
+  base-slots: 1
+  unlock-thresholds:
+    - pickaxe-level: 10
+      slots: 2
+    - pickaxe-level: 25
+      slots: 3
+    - prestige: 1
+      slots: 4
+    - prestige: 3
+      slots: 5
+```

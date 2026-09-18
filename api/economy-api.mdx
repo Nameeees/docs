@@ -1,0 +1,185 @@
+---
+title: "JPPrisonAPI: Economy Balance Methods"
+sidebarTitle: "Economy API"
+description: "Use JPPrisonAPI to read, grant, or deduct economy balances in JPPrison. All methods are static, null-safe, and support UUID and OfflinePlayer."
+---
+
+`com.jpprison.economy.JPPrisonAPI` provides static, null-safe methods for reading and modifying player economy balances from any plugin. All methods support both `UUID` and `OfflinePlayer` lookups.
+
+**Class:** `com.jpprison.economy.JPPrisonAPI`
+
+## Method Reference
+
+### Get Balance
+
+Returns the player's current balance for the specified economy.
+
+```java
+double balance = JPPrisonAPI.getBalance(uuid, "tokens");
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `uuid` | `UUID` | The player's UUID |
+| `economy` | `String` | The economy ID (e.g. `"tokens"`, `"gems"`) |
+
+**Returns:** `double` — the player's balance, or `0.0` if the player has no data.
+
+---
+
+### Check Affordability
+
+Returns `true` if the player has at least the specified amount in the given economy.
+
+```java
+boolean canAfford = JPPrisonAPI.has(uuid, 500.0, "tokens");
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `uuid` | `UUID` | The player's UUID |
+| `amount` | `double` | The amount to check against |
+| `economy` | `String` | The economy ID |
+
+**Returns:** `boolean` — `false` if the player has insufficient balance or no data.
+
+---
+
+### Give Currency
+
+Adds the specified amount to the player's balance.
+
+```java
+JPPrisonAPI.give(uuid, 1000.0, "tokens");
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `uuid` | `UUID` | The player's UUID |
+| `amount` | `double` | The amount to add |
+| `economy` | `String` | The economy ID |
+
+<Note>
+  This call fires a `BalanceChangeEvent` with cause `API_GIVE`. You can listen for and cancel it in your own plugin.
+</Note>
+
+---
+
+### Deduct Currency
+
+Removes the specified amount from the player's balance. Returns `false` if the player cannot afford it.
+
+```java
+boolean success = JPPrisonAPI.take(uuid, 250.0, "tokens");
+if (!success) {
+    player.sendMessage("You can't afford that!");
+}
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `uuid` | `UUID` | The player's UUID |
+| `amount` | `double` | The amount to deduct |
+| `economy` | `String` | The economy ID |
+
+**Returns:** `boolean` — `false` if the player had insufficient balance (no deduction occurs).
+
+---
+
+### Attempt a Purchase
+
+An atomic operation that checks the player's balance, deducts the cost, and returns the result — all in one call. Use this for shop and crate plugins to avoid race conditions.
+
+```java
+boolean purchased = JPPrisonAPI.tryPurchase(uuid, new EconomyCost("500 tokens"));
+if (purchased) {
+    // give the player their item
+} else {
+    player.sendMessage("Insufficient tokens.");
+}
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `uuid` | `UUID` | The player's UUID |
+| `cost` | `EconomyCost` | The parsed cost object |
+
+**Returns:** `boolean` — `true` if the purchase succeeded and the balance was deducted.
+
+---
+
+### Format a Value
+
+Formats a numeric amount using the economy's configured symbol, color, and decimal format for display in chat or GUIs.
+
+```java
+String display = JPPrisonAPI.format(1500.0, "tokens");
+// → "✦1,500"
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `amount` | `double` | The amount to format |
+| `economy` | `String` | The economy ID |
+
+**Returns:** `String` — the formatted, color-coded balance string.
+
+---
+
+## EconomyCost
+
+`EconomyCost` parses a human-readable cost string where the economy ID comes last. This is ideal for config-driven pricing where the economy type is read from YAML.
+
+```java
+// Parse a cost string (economy id at the end)
+EconomyCost cost = new EconomyCost("500 tokens");
+EconomyCost gemCost = new EconomyCost("100 gems");
+
+// Use with tryPurchase
+boolean purchased = JPPrisonAPI.tryPurchase(uuid, cost);
+```
+
+**Config-driven example:**
+
+```yaml
+# Your plugin's config.yml
+shop-item-cost: "500 tokens"
+```
+
+```java
+String costString = config.getString("shop-item-cost");
+EconomyCost cost = new EconomyCost(costString);
+JPPrisonAPI.tryPurchase(uuid, cost);
+```
+
+---
+
+## WorldGuard Flag
+
+JPPrison registers a `jpprison-enchants` WorldGuard flag to gate enchant payouts inside specific regions. You can access this flag from your own plugin to perform the same check.
+
+```java
+// Get the jpprison-enchants flag instance for external WorldGuard checks
+StateFlag flag = JPPrisonAPI.getWorldGuardFlag();
+
+// Example: check a location against the flag
+RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+RegionQuery query = container.createQuery();
+ApplicableRegionSet regions = query.getApplicableRegions(BukkitAdapter.adapt(location));
+
+boolean enchantEnabled = regions.testState(null, flag);
+```
+
+---
+
+## Null Safety
+
+<Note>
+  All `JPPrisonAPI` methods return safe defaults if the player has no stored data or if the economy ID does not exist:
+  - `getBalance` → `0.0`
+  - `has` → `false`
+  - `take` → `false`
+  - `give` → no-op (silent)
+
+  You never need to null-check the return values of these methods.
+</Note>

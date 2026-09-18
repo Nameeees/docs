@@ -1,0 +1,75 @@
+---
+title: "JPPrison Developer API Overview"
+sidebarTitle: "Overview"
+description: "Integrate shops, crates, and quest plugins with JPPrison using the Java API. Access economy balances, fire purchase transactions, and listen for balance events."
+---
+
+JPPrison exposes a Java API for plugin developers who need to read or write economy balances, check if a player can afford something, or react to economy transactions. This is useful for shop plugins, crate plugins, quest systems, and web stores.
+
+## Available API Surface
+
+- **`JPPrisonAPI`** — static economy management class for reading and modifying balances
+- **`BalanceChangeEvent`** — cancellable Bukkit event fired before every balance write
+- **`EconomyCost`** — cost string parser that supports config-driven, multi-economy pricing
+- **WorldGuard flag accessor** — check whether a location is inside a JPPrison-managed rewards region
+- **PlaceholderAPI expansion** — use `%jpprison_<variable>%` in scoreboards, holograms, chat, and tab lists
+
+## Getting the API
+
+Declare JPPrison as a dependency in your `plugin.yml` so Bukkit loads it before your plugin:
+
+```yaml
+# plugin.yml
+depend: [JPPrison]
+```
+
+If your plugin can function without JPPrison, declare it as a soft dependency instead:
+
+```yaml
+# plugin.yml
+softdepend: [JPPrison]
+```
+
+When using a soft dependency, guard every API call with a presence check:
+
+```java
+if (Bukkit.getPluginManager().getPlugin("JPPrison") != null) {
+    double balance = JPPrisonAPI.getBalance(uuid, "tokens");
+}
+```
+
+## Maven / Gradle
+
+Include the JPPrison jar as a `provided` (compile-only) dependency in your build — it must be present on the server at runtime, but you should not bundle it inside your own jar.
+
+```xml
+<!-- Maven -->
+<dependency>
+    <groupId>com.jpprison</groupId>
+    <artifactId>jpprison</artifactId>
+    <version>LATEST</version>
+    <scope>provided</scope>
+</dependency>
+```
+
+```groovy
+// Gradle
+compileOnly files('libs/JPPrison.jar')
+```
+
+## Explore the API
+
+<CardGroup cols={2}>
+  <Card title="Economy API" icon="coins" href="/api/economy-api">
+    Read balances, give and take currency, and process atomic purchases with `JPPrisonAPI`.
+  </Card>
+  <Card title="Events" icon="bolt" href="/api/events">
+    Listen for `BalanceChangeEvent` to react to or cancel any economy transaction.
+  </Card>
+  <Card title="Placeholders" icon="tag" href="/api/placeholders">
+    Use `%jpprison_<variable>%` with PlaceholderAPI in scoreboards, holograms, and chat.
+  </Card>
+  <Card title="WorldGuard Integration" icon="map" href="/api/economy-api#worldguard-flag">
+    Access the `jpprison-enchants` flag to check reward regions from your own plugin.
+  </Card>
+</CardGroup>

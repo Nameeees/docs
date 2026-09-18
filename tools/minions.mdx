@@ -1,0 +1,88 @@
+---
+title: "Minions: Mini-Mob Crew That Mines for You"
+sidebarTitle: "Minions"
+description: "JPPrison minions are miniature baby mobs that mine independently. Three mob types are available — zombie, pigman, and villager — each with its own upgrade tree."
+---
+
+Minions are tiny baby mobs — zombie, pigman, and villager — that mine the prison on your behalf, earning the same economy rewards as if you mined the blocks yourself. Unlike the Autominer, you can have multiple minions active simultaneously, letting you field an entire crew at once.
+
+## Minion Types
+
+| Type | Appearance | Notes |
+|------|------------|-------|
+| Zombie | Baby zombie | Reliable all-rounder |
+| Pigman | Baby pigman | Higher base speed |
+| Villager | Baby villager | Economy-focused bonuses |
+
+## Opening the Crew Menu
+
+Open the minion management menu with any of these commands:
+
+```
+/minion
+/minions
+/crew
+```
+
+From the menu you can view all active minions, feed them additional time, purchase upgrades, and dismiss minions you no longer need.
+
+## Getting Minion Time
+
+Minions run on time items. Admins grant time items to players using:
+
+```
+/jpprison minion give <player> <type> <time> [count]
+```
+
+The `<time>` argument accepts standard formats: `10m`, `2h`, `1d`, and so on. The optional `[count]` argument controls how many time items to grant (defaults to 1).
+
+**Example** — give Steve two 1-hour zombie minion time items:
+
+```
+/jpprison minion give Steve zombie 1h 2
+```
+
+Steve receives two separate items in his inventory, each good for one hour of zombie minion activity.
+
+## Feeding Minions
+
+To extend an active minion's runtime, take a minion time item from your inventory and use it on the minion. The time on the item adds directly to the minion's remaining duration. Minions stop mining and disappear automatically when their time runs out, so keep them fed to maintain your crew.
+
+## Upgrade Modules
+
+Each minion type has its own independent upgrade tree, so your zombie upgrades do not affect your villager and vice versa. You purchase upgrades from the `/minions` menu using your economy balance.
+
+Typical upgrades available per minion type:
+
+- **Speed** — how fast the minion moves and mines
+- **Earnings Multiplier** — scales economy payout per block
+- **Capacity** — how many blocks the minion targets per cycle
+- **Area of Effect** — expands the mining radius around the minion
+
+All upgrades persist permanently per player per minion type — they carry over between sessions and are never reset when a minion's time expires.
+
+Upgrade module definitions live in `plugins/JPPrison/minion-upgrades/`.
+
+## Configuration
+
+| File / Folder | Purpose |
+|---------------|---------|
+| `plugins/JPPrison/minions.yml` | Main minion settings |
+| `plugins/JPPrison/minions/` | Per-type minion definitions |
+| `plugins/JPPrison/minion-upgrades/` | Upgrade module definitions |
+
+After editing any of these files, run `/jpprison reload` to apply your changes without restarting the server.
+
+## Diagnosing Issues
+
+If your minions are not earning rewards or behaving unexpectedly, run:
+
+```
+/jpprison minion check
+```
+
+This command inspects the current crew state and checks the `jpprison-enchants` WorldGuard flag at your location.
+
+<Note>
+Minion rewards respect the `jpprison-enchants` WorldGuard flag. Deploy your crew inside a rewards region to ensure every block they mine pays out. Outside a rewards region, minions will still break blocks but no economy rewards will be issued.
+</Note>

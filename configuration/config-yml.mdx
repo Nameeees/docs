@@ -1,0 +1,126 @@
+---
+title: "config.yml Reference for JPPrison"
+sidebarTitle: "config.yml"
+description: "Reference for JPPrison's main config.yml file. Controls the pickaxe XP curve, prestige costs, timed boosts, Vault settings, feature flags, and backup schedule."
+---
+
+`config.yml` is the master control file for JPPrison. It governs the pickaxe leveling curve, prestige system, timed boosts, Vault economy bridge, automatic backups, and global feature flags.
+
+## Pickaxe Settings
+
+The `pickaxe` block controls the maximum pickaxe level, the XP required to reach each level, and safety options for dropping the pickaxe.
+
+```yaml
+pickaxe:
+  max-level: 100
+  xp-curve:
+    base: 1000
+    growth: 1.2        # each level requires 20% more XP than the last
+  drop-confirm: true   # require double-Q to drop pickaxe
+```
+
+| Key | Type | Description |
+|---|---|---|
+| `max-level` | Integer | The highest level a pickaxe can reach |
+| `xp-curve.base` | Integer | XP required to reach level 2 |
+| `xp-curve.growth` | Decimal | Multiplier applied to XP cost each level |
+| `drop-confirm` | Boolean | Requires double-tap Q to drop the pickaxe, preventing accidental loss |
+
+## Prestige Settings
+
+The `prestige` block enables the prestige system and controls how much it costs to prestige, how costs scale, and what multiplier bonus each prestige grants.
+
+```yaml
+prestige:
+  enabled: true
+  cost:
+    type: tokens
+    base: 100000
+    growth: 2.5
+  multiplier-per-prestige: 0.1
+  max-multiplier: 5.0
+```
+
+| Key | Type | Description |
+|---|---|---|
+| `enabled` | Boolean | Toggles the prestige system on or off |
+| `cost.type` | String | Economy ID used for prestige costs |
+| `cost.base` | Integer | Cost to achieve the first prestige |
+| `cost.growth` | Decimal | Multiplier applied to cost each subsequent prestige |
+| `multiplier-per-prestige` | Decimal | XP/sell multiplier bonus awarded per prestige level |
+| `max-multiplier` | Decimal | Upper cap on the total accumulated multiplier |
+
+## Vault Integration
+
+The `vault` block connects JPPrison to any Vault-compatible economy plugin installed on your server.
+
+```yaml
+vault:
+  enabled: true
+  economy-id: money    # which JPPrison economy maps to Vault
+```
+
+| Key | Type | Description |
+|---|---|---|
+| `enabled` | Boolean | Enables the Vault economy bridge |
+| `economy-id` | String | The `id` of the JPPrison economy exposed to Vault |
+
+<Note>
+  The `economy-id` value must match the `id` field of an economy file inside `plugins/JPPrison/economies/`. See the [Economies Config](/configuration/economies) page for details.
+</Note>
+
+## Backups
+
+The `backups` block controls how often JPPrison automatically saves a zipped snapshot of your database and all config files to `plugins/JPPrison/backups/`.
+
+```yaml
+backups:
+  enabled: true
+  interval-hours: 6
+  max-keep: 10
+```
+
+| Key | Type | Description |
+|---|---|---|
+| `enabled` | Boolean | Enables automatic scheduled backups |
+| `interval-hours` | Integer | Hours between each automatic backup |
+| `max-keep` | Integer | Maximum number of backup zips to retain before the oldest is deleted |
+
+Run `/jpprison backup` at any time to create an immediate backup outside the schedule.
+
+## Feature Flags
+
+Each module listed under `features` can be independently toggled. Set a value to `false` to completely disable that system and unload its functionality.
+
+```yaml
+features:
+  pets: true
+  autominer: true
+  minions: true
+  loot-chests: true
+  momentum: true
+  boost-armor: true
+  shards: true
+  runes: true
+```
+
+| Flag | Description |
+|---|---|
+| `pets` | Companion pets with leveling and boosts |
+| `autominer` | Clone miners that run in the background |
+| `minions` | Mini-mob crew that mines alongside you |
+| `loot-chests` | Placeable chests with randomised loot |
+| `momentum` | Consecutive-mining speed/bonus mechanic |
+| `boost-armor` | Armor sets that provide enchant multipliers |
+| `shards` | Socketable boost shards for the pickaxe |
+| `runes` | Socketable runes for extended enchant effects |
+
+## Reloading
+
+After saving any changes to `config.yml`, apply them instantly with:
+
+```
+/jpprison reload
+```
+
+No server restart is required.

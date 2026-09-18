@@ -1,0 +1,45 @@
+---
+title: "JPPrison Player Commands Reference"
+sidebarTitle: "Player Commands"
+description: "Full reference for JPPrison player commands. All commands require jpprison.user (granted to everyone by default). Includes economy, pets, minions, and more."
+---
+
+All JPPrison player commands require the `jpprison.user` permission, which is granted to everyone by default. These commands cover economy management, pickaxe prestige, pets, armor, autosell, and more.
+
+## Command Reference
+
+| Command | Aliases | Description |
+|---|---|---|
+| `/prison` | | Player help, balance summary, and prestige info |
+| `/prison balance` | | Shows balances of every economy plus cheapest upcoming upgrades |
+| `/prison prestige` | | Prestige your pickaxe (requires reaching max level and paying the cost) |
+| `/autosell` | `/as` | Toggle autosell on/off |
+| `/sell` | | Sell the item currently held in your hand |
+| `/sellall` | `/sa` | Sell all sellable items in your inventory |
+| `/<economy>` | | Show your balance for that economy (e.g. `/tokens`, `/gems`) |
+| `/<economy> pay <player> <amount>` | | Send balance to another player |
+| `/<economy> top` | | View the top-10 leaderboard for that economy |
+| `/blockstop` | | View the top-10 blocks-mined leaderboard |
+| `/xptop` | | View the top-10 pickaxe XP leaderboard |
+| `/pets` | `/pet` | Open the pet picker and submenus |
+| `/armor` | `/armors` | Open the boost armor menu |
+| `/autominer` | `/miner` | Open the autominer/clone miner menu |
+| `/minion` | `/minions`, `/crew` | Open the minion crew menu |
+| `/earn` | `/earns` | View the live enchant earnings board |
+
+## Economy Commands
+
+Replace `<economy>` with your economy ID. For example, if your server has `tokens` and `gems` economies, you can run:
+
+```
+/tokens
+/tokens pay Steve 500
+/tokens top
+/gems
+/gems pay Alex 100
+/gems top
+```
+
+<Note>
+  Economy IDs are defined in your JPPrison configuration. Ask your server administrator which economies are available, or run `/prison balance` to see all active economies at a glance.
+</Note>

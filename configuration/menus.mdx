@@ -1,0 +1,78 @@
+---
+title: "Customizing JPPrison Menus in menus/"
+sidebarTitle: "Menus Config"
+description: "All JPPrison GUI menus are defined in YAML files inside the menus/ folder. Adjust titles, layouts, item materials, lore, and button actions."
+---
+
+Every menu in JPPrison — from the pickaxe upgrade screen to the pets menu — is defined as a YAML file in `plugins/JPPrison/menus/`. You can fully customize titles, item layouts, button materials, lore, and display text without touching any code.
+
+## Menu File Structure
+
+Each menu file follows a common structure: a `title`, a `rows` count defining the inventory size, and an `items` map where each entry represents one slot in the GUI.
+
+```yaml
+title: "&6&lPickaxe Upgrades"
+rows: 6
+items:
+  enchant-slot:
+    slot: 10
+    material: ENCHANTED_BOOK
+    name: "&e{enchant_name}"
+    lore:
+      - "&7Level: &f{level}/{max_level}"
+      - "&7Cost: &f{cost} tokens"
+      - "&eClick to upgrade!"
+```
+
+| Key | Type | Description |
+|---|---|---|
+| `title` | String | The inventory title shown at the top of the GUI. Supports `&` color codes. |
+| `rows` | Integer | Number of rows in the inventory (1–6, each row holds 9 slots). |
+| `items.<key>` | Map | A named item entry. The key is an internal reference used within the file. |
+| `items.<key>.slot` | Integer | Zero-indexed slot number where the item appears (0–53 for a 6-row inventory). |
+| `items.<key>.material` | String | Bukkit Material name for the item's icon. |
+| `items.<key>.name` | String | Item display name. Supports `&` color codes and `{placeholders}`. |
+| `items.<key>.lore` | List | Lines of item lore. Each entry is one line. Supports color codes and placeholders. |
+
+## Available Placeholders
+
+Menus support `{variable}` placeholders for dynamic values. The specific variables available depend on which menu you are editing. Common placeholders include:
+
+| Placeholder | Example value | Description |
+|---|---|---|
+| `{level}` | `42` | Current level of the enchant, pet, or upgrade |
+| `{max_level}` | `100` | Maximum possible level |
+| `{cost}` | `12,500` | Upgrade cost formatted with separators |
+| `{enchant_name}` | `Explosive` | Display name of the enchant |
+| `{balance}` | `1,337` | Player's current balance in the relevant economy |
+| `{name}` | `Steve` | Player's name |
+
+Check the default menu files for the full list of placeholders supported by each individual menu.
+
+## Color Codes
+
+Use `&` color codes throughout menu files for titles, item names, and lore lines.
+
+| Code | Effect |
+|---|---|
+| `&a`–`&f`, `&0`–`&9` | Standard colors |
+| `&l` | Bold |
+| `&o` | Italic |
+| `&n` | Underline |
+| `&m` | Strikethrough |
+| `&k` | Obfuscated (random characters) |
+| `&r` | Reset all formatting |
+
+## Applying Changes
+
+After editing any file in `menus/`, save it and run:
+
+```
+/jpprison reload
+```
+
+Menu changes take effect immediately — the next time any player opens that menu they will see the updated version.
+
+<Tip>
+  Edit `plugins/JPPrison/colors/` to change the pickaxe lore color themes shown in the pickaxe menu. Each file in that folder defines a named color theme players can select.
+</Tip>

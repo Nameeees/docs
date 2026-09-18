@@ -1,0 +1,81 @@
+---
+title: "Configuring Pickaxe Enchants in enchants/"
+sidebarTitle: "Enchants Config"
+description: "Each pickaxe enchant in JPPrison is a YAML file in the enchants/ folder. Configure levels, costs, unlock requirements, prestige, effects, and messages."
+---
+
+Every enchant in JPPrison — all 35 bundled ones and any you add — is a YAML file in `plugins/JPPrison/enchants/`. Edit any field and reload; no restart or recompile needed.
+
+## Full Enchant YAML Example
+
+The file below shows every configurable section for the `explosive` enchant.
+
+```yaml
+id: explosive
+name: "&cExplosive"
+description: "Blasts a 3×3 area around each mined block."
+max-level: 100
+unlock-level: 1        # pickaxe level required to unlock
+unlock-prestige: 0     # prestige level required to unlock
+costs:
+  type: tokens
+  base: 500
+  growth: 1.15         # 15% cost increase per level
+chance:
+  base: 0.05           # 5% activation chance at level 1
+  growth: 0.005        # +0.5% per level
+  max: 0.75            # caps at 75%
+effects:
+  activation-particle: EXPLOSION_NORMAL
+  activation-sound: ENTITY_GENERIC_EXPLODE
+  message: "&c💥 Explosive triggered!"
+prestige:
+  enabled: true
+  max: 10
+  cost: 50000
+  multiplier-per-prestige: 0.1
+  max-multiplier: 2.0
+```
+
+## Field Reference
+
+| Section | Key | Description |
+|---|---|---|
+| _(root)_ | `id` | Unique enchant identifier. Must match the filename (e.g. `explosive.yml`). |
+| _(root)_ | `name` | Display name with color codes shown in lore and menus. |
+| _(root)_ | `description` | Short description shown in the enchant upgrade menu. |
+| _(root)_ | `max-level` | Highest level this enchant can be upgraded to. |
+| _(root)_ | `unlock-level` | Pickaxe level the player must reach before the enchant appears. |
+| _(root)_ | `unlock-prestige` | Prestige level required to unlock the enchant. |
+| `costs` | `type` | Economy ID used for upgrade costs. |
+| `costs` | `base` | Cost to purchase level 1. |
+| `costs` | `growth` | Multiplier applied to cost each subsequent level. |
+| `chance` | `base` | Fractional activation chance at level 1 (1.0 = 100%). |
+| `chance` | `growth` | Chance added per level. |
+| `chance` | `max` | Maximum activation chance cap. |
+| `effects` | `activation-particle` | Bukkit `Particle` enum name played at the mined block on activation. |
+| `effects` | `activation-sound` | Bukkit `Sound` enum name played on activation. |
+| `effects` | `message` | Chat message sent to the player on activation. Leave blank to suppress. |
+| `prestige` | `enabled` | Enables the per-enchant prestige system. |
+| `prestige` | `max` | Maximum number of times this enchant can be prestiged. |
+| `prestige` | `cost` | Token cost per enchant prestige. |
+| `prestige` | `multiplier-per-prestige` | Activation chance multiplier bonus per enchant prestige. |
+| `prestige` | `max-multiplier` | Cap on the total multiplier from enchant prestige. |
+
+## Adding a New Enchant
+
+1. Create a new YAML file in `plugins/JPPrison/enchants/` — for example, `fortune_boost.yml`.
+2. Set a unique `id` that matches the filename (without `.yml`).
+3. Define all required fields following the structure above.
+4. Save the file and run `/jpprison reload`.
+
+The enchant appears in the pickaxe upgrade menu immediately and respects all `unlock-level` and `unlock-prestige` gates you configured.
+
+## Activation Particles & Sounds
+
+Use Bukkit enum names for `activation-particle` and `activation-sound` to ensure cross-version compatibility. You can find the full lists in the Bukkit Javadocs:
+
+- **Particles** — values from `org.bukkit.Particle` (e.g. `FLAME`, `CRIT`, `EXPLOSION_NORMAL`)
+- **Sounds** — values from `org.bukkit.Sound` (e.g. `ENTITY_GENERIC_EXPLODE`, `BLOCK_ANVIL_USE`, `UI_BUTTON_CLICK`)
+
+JPPrison maps these names internally so the same config works across supported Minecraft versions.

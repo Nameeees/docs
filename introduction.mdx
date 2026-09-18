@@ -1,0 +1,92 @@
+---
+title: "JPPrison: All-in-One Prison Server Plugin"
+sidebarTitle: "Introduction"
+description: "Learn what JPPrison offers — enchanted pickaxes, multiple economies, pets, minions, prestige, and 15+ integrated systems in a single plugin jar."
+---
+
+JPPrison is a complete, all-in-one plugin for Minecraft Prison-gamemode servers. Instead of stitching together a dozen separate plugins to cover enchants, economies, pets, and prestige, you install one jar and get every system pre-integrated, balanced, and ready to configure. It is built for server owners who want a stable, performance-conscious foundation without spending hours chasing inter-plugin compatibility.
+
+## What's Included
+
+JPPrison ships with more than 15 distinct systems out of the box:
+
+<CardGroup cols={2}>
+  <Card title="Pickaxe Enchants" icon="wand-magic-sparkles">
+    **35 bundled enchantments** applied directly to a player's pickaxe. Includes explosion-based enchants (Bomb, Nuke, Drill), quality-of-life enchants (Auto-Smelt, Tokenator, Lucky), and combat-adjacent enchants. Every enchant is individually toggleable and configurable.
+  </Card>
+  <Card title="Custom Economies" icon="coins">
+    Run **Tokens**, **Gems**, and any number of additional custom currencies simultaneously. Each economy has its own balance storage, rewards configuration, and optional Vault bridge.
+  </Card>
+  <Card title="Autosell" icon="cash-register">
+    Automatically sells mined blocks for configurable prices. Supports per-block prices, sell multipliers, and economy routing (e.g., sell cobblestone for Tokens and diamond ore for Gems).
+  </Card>
+  <Card title="Bombs & Drills" icon="bomb">
+    Consumable mining tools players can acquire as rewards. Bombs clear a configurable radius; Drills mine a straight tunnel — both depositing proceeds into the player's economies.
+  </Card>
+  <Card title="Autominer" icon="robot">
+    Time-based offline mining. Players spend currency or earn time as a reward; the autominer accrues blocks and money while they are offline.
+  </Card>
+  <Card title="Minions" icon="person-digging">
+    Deployable minions that mine autonomously in a region. Configurable mine speed, inventory size, and upgrade tiers.
+  </Card>
+  <Card title="Pets" icon="paw">
+    A collectible pet system where each pet provides passive bonuses — XP boosts, sell multipliers, rare-drop chances. Pets level up over time with their owner.
+  </Card>
+  <Card title="Shards & Runes" icon="gem">
+    Consumable items that apply temporary or permanent upgrades to a player's pickaxe. Shards feed the enchant XP system; Runes unlock special properties.
+  </Card>
+  <Card title="Boost Armor" icon="shield-halved">
+    Armor sets that grant configurable mining or economy boosts while worn. Each piece is independently configurable.
+  </Card>
+  <Card title="Loot Chests" icon="treasure-chest">
+    Placeable loot chests with weighted random reward tables — currencies, shards, pets, or custom items.
+  </Card>
+  <Card title="Prestige" icon="star">
+    A fully configurable prestige system. Define prestige requirements, reset behavior, cumulative bonuses, and leaderboard visibility.
+  </Card>
+  <Card title="Momentum & Combos" icon="bolt">
+    A combo-multiplier system that rewards uninterrupted mining with escalating sell bonuses, encouraging active playtime.
+  </Card>
+  <Card title="Timed Boosts" icon="clock">
+    Server-wide or per-player timed boosts (XP rate, sell multiplier, etc.) that staff can activate through commands or automatic scheduling.
+  </Card>
+  <Card title="Leaderboards" icon="ranking-star">
+    Built-in leaderboards for blocks mined, balances, prestige rank, and more — queryable via PlaceholderAPI for use in scoreboards or holograms.
+  </Card>
+  <Card title="Earnings Recap" icon="chart-bar">
+    Periodic in-chat summaries showing each player how much they earned in the last session — keeps players engaged and informed.
+  </Card>
+</CardGroup>
+
+## Compatibility
+
+JPPrison is built to run on the widest possible range of Minecraft servers.
+
+| Requirement | Details |
+|---|---|
+| **Server software** | Spigot or Paper |
+| **Minecraft versions** | 1.8.8 through the latest release |
+| **Java** | Java 8 or newer |
+| **Database** | SQLite — bundled, no external database needed |
+
+### Optional Plugin Integrations
+
+You do **not** need any of these to run JPPrison, but installing them unlocks additional functionality:
+
+| Plugin | What It Enables |
+|---|---|
+| **WorldGuard 6.x or 7.x+** | Lets you set the `jpprison-enchants allow` region flag on your mine regions, controlling exactly where pickaxe enchants fire and rewards are granted. Both the legacy (6.x) and modern (7.x+) API are supported automatically. |
+| **Vault** | Bridges one of your JPPrison economies (configurable) to Vault's economy API, so third-party shop plugins (ChestShop, EssentialsX Shop, etc.) can read and modify player balances. |
+| **PlaceholderAPI** | Registers the `%jpprison_<variable>%` placeholder family, giving you access to every player stat (balance, prestige, blocks mined, active boosts, and more) in any PAPI-compatible plugin such as scoreboards, holograms, or chat formatters. |
+
+## No Dependencies Required
+
+JPPrison uses no NMS (net.minecraft.server) code, no Adventure/Kyori API, and no ProtocolLib. It communicates entirely through the standard Bukkit/Spigot API, which means:
+
+- It works across all supported versions without version-specific jars or bridges.
+- You do **not** need to install Adventure, ProtocolLib, or any packet library.
+- Updates to Paper or Spigot rarely break compatibility.
+
+## License
+
+JPPrison is **All Rights Reserved** software. You may install and run it on your own server, including public and for-profit servers. You may **not** redistribute, resell, decompile, or modify the plugin jar. Each purchase entitles the buyer to run the plugin on their own server infrastructure.

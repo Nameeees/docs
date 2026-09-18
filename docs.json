@@ -1,72 +1,94 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "JPPrison",
+  "theme": "maple",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#ef7025",
+    "light": "#eec9bc",
+    "dark": "#4fa1ab"
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "pages": [
+    "tabs": [
       {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Core Systems",
+            "pages": [
+              "systems/economies",
+              "systems/pickaxe-enchants",
+              "systems/autosell",
+              "systems/prestige"
+            ]
+          },
+          {
+            "group": "Mining Tools",
+            "pages": [
+              "tools/bombs-drills",
+              "tools/autominer",
+              "tools/minions"
+            ]
+          },
+          {
+            "group": "Progression",
+            "pages": [
+              "progression/pets",
+              "progression/boost-armor",
+              "progression/shards-runes",
+              "progression/loot-chests",
+              "progression/momentum"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "configuration/overview",
+              "configuration/config-yml",
+              "configuration/autosell-yml",
+              "configuration/economies",
+              "configuration/enchants",
+              "configuration/menus"
+            ]
+          },
+          {
+            "group": "Commands & Permissions",
+            "pages": [
+              "commands/player-commands",
+              "commands/admin-commands",
+              "commands/permissions"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Developer API",
+        "groups": [
+          {
+            "group": "API Reference",
+            "pages": [
+              "api/overview",
+              "api/economy-api",
+              "api/events",
+              "api/placeholders"
+            ]
+          }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
     ]
   },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/jpprison/jpprison"
     }
   }
 }

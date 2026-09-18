@@ -1,0 +1,54 @@
+---
+title: "JPPrison Permissions Reference"
+sidebarTitle: "Permissions"
+description: "Full list of JPPrison permissions nodes, their defaults, and what each one controls. Configure in your server's permissions plugin (e.g., LuckPerms)."
+---
+
+JPPrison uses two main permission nodes plus several optional fine-grained nodes. Configure them in your server's permissions plugin (such as LuckPerms or PermissionsEx).
+
+## Permission Nodes
+
+| Permission | Default | Description |
+|---|---|---|
+| `jpprison.admin` | op | Access to all admin commands (`/jpprison`, balance management, item giving, etc.) |
+| `jpprison.user` | true | Access to all player commands (economy, pets, prestige, autosell, etc.) |
+| `jpprison.pickaxe.noconfirm` | false | Skip the double-Q drop confirmation for the pickaxe |
+| `jpprison.pet.<id>` | op | Equip a specific pet without needing its unlock item (e.g. `jpprison.pet.rotty`) |
+| `jpprison.pet.armor` | op | Open the pet customization and mini armor menu |
+
+<Note>
+  The `boomber` pet is free for everyone — no permission or unlock item required.
+</Note>
+
+## Pet Permission IDs
+
+Use the pet's ID as defined in `pets.yml` when constructing a pet permission node. For example, to allow all players to equip the `dragon` pet without unlocking it, grant `jpprison.pet.dragon`.
+
+```
+jpprison.pet.dragon
+jpprison.pet.rotty
+jpprison.pet.phoenix
+```
+
+## Setting Up with LuckPerms
+
+<Steps>
+  <Step title="Grant admin permission to a group">
+    Run the following command to give a group full admin access:
+    ```
+    lp group admin permission set jpprison.admin true
+    ```
+  </Step>
+  <Step title="Grant no-confirm drop to trusted players">
+    Allow a specific player to drop their pickaxe without the double-Q confirmation:
+    ```
+    lp user Steve permission set jpprison.pickaxe.noconfirm true
+    ```
+  </Step>
+  <Step title="Grant a pet permission">
+    Allow a group (such as VIP donors) to equip a specific pet without the unlock item:
+    ```
+    lp group vip permission set jpprison.pet.rotty true
+    ```
+  </Step>
+</Steps>

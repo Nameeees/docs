@@ -1,0 +1,114 @@
+---
+title: "Prestige System and Progression in JPPrison"
+sidebarTitle: "Prestige"
+description: "Prestige your pickaxe to reset levels and earn permanent multiplier bonuses. JPPrison supports global pickaxe prestige and per-enchant prestige independently."
+---
+
+Prestige is JPPrison's long-term progression loop — players reset their pickaxe level (or individual enchant levels) in exchange for **permanent multiplier bonuses** that compound over time. The further a player pushes into the prestige system, the more powerful their pickaxe becomes relative to the time invested.
+
+## Global Prestige
+
+Global prestige resets the entire pickaxe level and awards a multiplier that boosts **all** economy earnings and XP gains.
+
+### How to Prestige
+
+Run `/prison` to check your current prestige level, your current pickaxe level, and the exact cost and level requirement to reach the next prestige tier. When you're ready:
+
+```
+/prison prestige
+```
+
+JPPrison validates the following before processing:
+
+1. Your pickaxe level has reached the configured maximum (e.g., level 100).
+2. You have enough currency to pay the prestige cost.
+
+If both conditions are met, your pickaxe level resets to 1 and your global prestige counter increments by one. Your new multiplier is applied immediately to all autosell income and XP rewards.
+
+### What the Multiplier Does
+
+The prestige multiplier is a flat bonus applied on top of all earnings:
+
+- A **+10% multiplier** at prestige 1 means every block you mine pays 1.1× the base price.
+- At prestige 5 with **+50%**, the same block pays 1.5× — without changing any block prices.
+
+Higher prestige tiers also unlock **higher multiplier caps**, meaning later prestiges can exceed limits that earlier ones cannot reach.
+
+<Tip>
+  Encourage players to use `/prison` regularly — seeing the next prestige tier's bonus and cost on screen is one of the strongest motivators for continued play.
+</Tip>
+
+## Per-Enchant Prestige
+
+Individual enchants support their own prestige tracks, **completely independent** of the global pickaxe prestige. A player can prestige a single enchant dozens of times without ever touching the global prestige system.
+
+- Per-enchant prestige is accessed through the **pickaxe upgrade GUI** (right-click the pickaxe).
+- Each enchant's prestige cost and maximum tiers are set in its own YAML file.
+- Prestiging an enchant resets **only that enchant's level** to 1.
+- The player earns a permanent bonus multiplier applied specifically to that enchant's output.
+
+### Per-Enchant Prestige vs. Global Prestige
+
+| | Per-Enchant Prestige | Global Pickaxe Prestige |
+|---|---|---|
+| **Scope** | One enchant resets to level 1 | Entire pickaxe level resets to 1 |
+| **Bonus** | Multiplier on that specific enchant's output | Multiplier across all economy earnings and XP |
+| **Access** | Pickaxe upgrade GUI | `/prison prestige` |
+| **Config** | Each enchant's YAML file (`plugins/JPPrison/enchants/`) | `config.yml` |
+| **Stacks with global?** | ✅ Yes — bonuses multiply together | — |
+
+Both systems can run simultaneously. A player who has prestiged both their pickaxe globally and their Explosive enchant individually will compound both bonuses on every Explosive activation.
+
+## Prestige Costs & Tiers
+
+Prestige costs scale exponentially to create meaningful long-term goals. Here's a generic example of how costs and multipliers might scale across tiers:
+
+| Prestige | Cost | Cumulative Multiplier Bonus |
+|---|---|---|
+| 1 | 100,000 tokens | +10% |
+| 2 | 250,000 tokens | +20% |
+| 3 | 500,000 tokens | +30% |
+| 5 | 1,000,000 tokens | +50% |
+| 10 | 5,000,000 tokens | +100% |
+
+<Note>
+  These values are illustrative. Your actual costs and bonuses are defined entirely by the `prestige` block in your `config.yml`. Tune them to match your server's economy pace.
+</Note>
+
+## Configuring Prestige
+
+The global prestige system is configured in `config.yml` under the `prestige` key:
+
+```yaml
+prestige:
+  enabled: true
+  max-level-required: 100      # Pickaxe level player must reach before prestiging
+  cost:
+    type: tokens               # Economy used to pay prestige costs
+    base: 100000               # Cost at prestige tier 1
+    growth: 2.5                # Each subsequent prestige multiplies cost by this factor
+  multiplier-per-prestige: 0.1 # Earnings/XP bonus added per prestige tier (+10% each)
+  max-multiplier: 5.0          # Hard cap on the total prestige multiplier (500%)
+```
+
+| Field | Description |
+|---|---|
+| `enabled` | Set to `false` to disable global prestige entirely |
+| `max-level-required` | The pickaxe level a player must reach before the prestige option unlocks |
+| `cost.type` | The economy `id` used to charge prestige costs |
+| `cost.base` | Cost in tokens for the very first prestige |
+| `cost.growth` | Exponential growth factor applied to cost per prestige tier |
+| `multiplier-per-prestige` | Flat bonus added to the earnings multiplier per prestige tier |
+| `max-multiplier` | The maximum total multiplier — no prestige tier can exceed this cap |
+
+After editing `config.yml`, run `/jpprison reload` to apply the new values.
+
+## Bonus Caps
+
+The `max-multiplier` setting exists to prevent runaway economy inflation on long-running servers. Without a cap, a player with 50 prestiges at `+10%` each would earn **6×** the base rate — which could collapse the value of early-game currency and make new-player progression feel pointless.
+
+Setting `max-multiplier: 5.0` means no player can ever earn more than **5× the base rate** from prestige alone, regardless of how many times they prestige. Enchant-level bonuses, timed boosts, and sell multiplier enchants stack on top of — but never circumvent — this cap.
+
+<Warning>
+  Changing `max-multiplier` on a live server affects all players immediately upon reload. Lowering it below a player's current multiplier will silently clamp their earnings down to the new cap. Communicate changes to your playerbase before applying them.
+</Warning>

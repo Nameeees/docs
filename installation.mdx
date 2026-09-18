@@ -1,0 +1,123 @@
+---
+title: "Install JPPrison on Your Minecraft Server"
+sidebarTitle: "Installation"
+description: "Download and install JPPrison on any Spigot or Paper server running Minecraft 1.8.8 through the latest release. Setup takes under five minutes."
+---
+
+JPPrison installs exactly like any standard Bukkit plugin — drop the jar into your `plugins/` folder and restart. There is no installer, no database server to configure, and no additional libraries to download. From download to first boot takes under five minutes.
+
+## Requirements
+
+<Note>
+  JPPrison requires **Java 8 or newer**. Most modern Minecraft server hosts already run Java 11 or Java 17 — you likely have nothing to change.
+</Note>
+
+- **Server software:** Spigot or Paper
+- **Minecraft version:** 1.8.8 through the latest release
+- **Database:** SQLite — bundled inside the jar, no setup required
+- **Optional:** WorldGuard 6.x / 7.x+, Vault, PlaceholderAPI (see [Optional Plugin Setup](#optional-plugin-setup) below)
+
+## Installation Steps
+
+<Steps>
+  <Step title="Download the Jar">
+    Grab the latest `JPPrison-<version>.jar` from your distribution source (purchase confirmation link, keystore, or private download page). Make sure you download the correct release for your server — the same jar supports all versions from 1.8.8 onward.
+  </Step>
+  <Step title="Drop It Into Your plugins/ Folder">
+    Copy or upload `JPPrison-<version>.jar` into your server's `plugins/` directory.
+
+    ```
+    server/
+    ├── plugins/
+    │   └── JPPrison-<version>.jar   ← place it here
+    ├── server.jar
+    └── ...
+    ```
+  </Step>
+  <Step title="Restart the Server">
+    Perform a **full server restart** — not a reload. JPPrison registers listeners, commands, and database hooks on startup that a `/reload` cannot set up cleanly.
+
+    On first boot JPPrison creates its entire configuration tree and prints a startup summary to the console. Look for lines prefixed with `[JPPrison]` to confirm it loaded successfully.
+  </Step>
+  <Step title="Locate the Generated Config Files">
+    After the first restart you will find all configuration files under:
+
+    ```
+    plugins/
+    └── JPPrison/
+        ├── config.yml          ← core settings, XP curves, feature toggles
+        ├── autosell.yml        ← block prices and sell routing
+        ├── enchants.yml        ← per-enchant settings and level caps
+        ├── prestige.yml        ← prestige ladder and rewards
+        ├── pets.yml            ← pet definitions and bonuses
+        ├── economies/          ← one file per custom economy
+        ├── lootchests/         ← loot table definitions
+        └── ...
+    ```
+  </Step>
+  <Step title="Edit Configs to Fit Your Server">
+    Open each file and adjust the values to match your server's design. Every option includes an inline comment explaining what it does. The most common first edits are:
+
+    - **`autosell.yml`** — set block prices
+    - **`config.yml`** — toggle features and adjust the pickaxe XP curve
+    - **`economies/tokens.yml`** — tune starting balance and reward rates
+  </Step>
+  <Step title="Reload After Config Changes">
+    After editing any config file, apply your changes without restarting by running:
+
+    ```
+    /jpprison reload
+    ```
+
+    JPPrison re-reads all configuration files and re-registers dynamic content (economies, loot tables, enchant settings) live. Player data and active sessions are preserved across reloads.
+  </Step>
+</Steps>
+
+## Optional Plugin Setup
+
+None of these plugins are required, but each one unlocks additional functionality.
+
+### WorldGuard
+
+Install WorldGuard (6.x or 7.x+) before starting your server. JPPrison auto-detects the API version.
+
+After creating your mine region, enable JPPrison rewards inside it:
+
+```bash
+/rg flag <region> jpprison-enchants allow
+```
+
+Without this flag, pickaxe enchants still fire visually but rewards (economy payouts, XP) are not granted inside that region. This lets you designate safe zones or spawn areas where enchants have no economic effect.
+
+### Vault
+
+Install Vault and restart. JPPrison detects Vault on startup and bridges the economy you specify in `config.yml`:
+
+```yaml
+# config.yml
+vault:
+  enabled: true
+  economy: tokens   # which JPPrison economy to expose via Vault
+```
+
+Third-party shop plugins that depend on Vault (EssentialsX Shop, ChestShop, etc.) will now read and modify the bridged economy's balances.
+
+### PlaceholderAPI
+
+Install PlaceholderAPI and restart. JPPrison automatically registers its placeholder expansion — no `/papi ecloud` download needed.
+
+Use the `%jpprison_<variable>%` format in any PAPI-compatible plugin. For example:
+
+| Placeholder | Returns |
+|---|---|
+| `%jpprison_tokens%` | Player's Token balance |
+| `%jpprison_gems%` | Player's Gem balance |
+| `%jpprison_prestige%` | Player's current prestige level |
+| `%jpprison_blocks_mined%` | Total blocks mined this session |
+| `%jpprison_active_boost%` | Active boost multiplier (e.g. `2.0x`) |
+
+## Hot-Swap Warning
+
+<Warning>
+  **Never replace the JPPrison jar while the server is running.** Doing so can corrupt your SQLite database, leave commands in a broken state, or cause class-loading errors that crash the server. Always stop the server fully, replace the jar, and then start it again when updating.
+</Warning>

@@ -1,0 +1,110 @@
+---
+title: "JPPrison Admin Commands Reference"
+sidebarTitle: "Admin Commands"
+description: "Full reference for JPPrison admin commands. Requires jpprison.admin (op by default). Covers reload, giving items, economy management, and diagnostics."
+---
+
+Admin commands require the `jpprison.admin` permission, which defaults to op. Use these commands to manage economies, grant items, run diagnostics, and reload configurations.
+
+## Server Management
+
+| Command | Description |
+|---|---|
+| `/jpprison` or `/jp` | Show the admin help menu |
+| `/jpprison reload` | Reload all configs, messages, economies, and menus |
+| `/jpprison backup` | Create an immediate backup of the database and configs |
+| `/jpprison announce <message>` | Broadcast a message to all online players |
+
+## Economy & Balance
+
+| Command | Description |
+|---|---|
+| `/jpprison balance` | View economy and upgrade balance overview |
+| `/<economy> give <player> <amount>` | Add balance to a player |
+| `/<economy> remove <player> <amount>` | Remove balance from a player |
+| `/jpprison xp <player> <amount>` | Grant raw pickaxe XP (capped at max level XP) |
+
+**Example:**
+```
+/tokens give Steve 5000
+/gems remove Alex 200
+/jpprison xp Steve 10000
+```
+
+## Timed Boosts
+
+| Command | Description |
+|---|---|
+| `/xpboost <player\|global> <multiplier> <time>` | Grant a timed XP boost. Use `global` for all players |
+| `/<economy> boost <player\|global> <multiplier> <time>` | Grant a timed economy boost |
+| `/jpprison boost <player>` | View a player's active boost breakdown |
+
+**Time format examples:** `30s`, `10m`, `2:30m`, `2h`, `1d`
+
+**Examples:**
+```
+/xpboost Steve 2x 1h
+/xpboost global 1.5x 30m
+/tokens boost Steve 3x 2h
+/jpprison boost Steve
+```
+
+## Giving Items
+
+| Command | Description |
+|---|---|
+| `/jpprison orb give <player> <xp> [count]` | Give XP orb items |
+| `/jpprison remnant give <player> <enchant> <levels> [count]` | Give enchant remnant items |
+| `/jpprison shard give <player> <shard-id> [count]` | Give shard items |
+| `/jpprison rune give <player> <rune-id> [count]` | Give rune items |
+| `/jpprison bomb give <player> [type] [count]` | Give bomb items |
+| `/jpprison drill give <player> [type] [count]` | Give drill items |
+| `/jpprison autominer give <player> <time>` | Give autominer time |
+| `/jpprison minion give <player> <type> <time> [count]` | Give minion time items |
+| `/pets give <player> <pet-id>` | Give a pet unlock item |
+
+**Examples:**
+```
+/jpprison orb give Steve 500 3
+/jpprison remnant give Steve haste 5 1
+/jpprison shard give Steve speed_shard 2
+/jpprison bomb give Steve tnt 5
+/jpprison autominer give Steve 1h
+/jpprison minion give Steve worker 30m 2
+/pets give Steve rotty
+```
+
+## Player Resets & Fixes
+
+| Command | Description |
+|---|---|
+| `/jpprison armor reset <player> [armor]` | Reset a player's boost armor progress |
+
+**Examples:**
+```
+/jpprison armor reset Steve
+/jpprison armor reset Steve helmet
+```
+
+## Diagnostics
+
+| Command | Description |
+|---|---|
+| `/jpprison bomb check` | Diagnose the blast flag gate at your current location |
+| `/jpprison autominer check` | Diagnose the autominer state |
+| `/jpprison minion check` | Diagnose the minion crew state |
+| `/guide` or `/features` | Open the developer reference hub |
+
+<Tip>
+  Run these diagnostic commands while standing in the affected mine or region. They check the state at your current location and print detailed debug output to your chat.
+</Tip>
+
+## Economy Creator
+
+| Command | Description |
+|---|---|
+| `/jpprison economy` | Open the in-game GUI economy creator |
+
+<Note>
+  The economy creator lets you build and configure new economies without editing config files directly. Changes take effect immediately without a reload.
+</Note>

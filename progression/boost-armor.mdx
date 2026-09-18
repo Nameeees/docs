@@ -1,0 +1,121 @@
+---
+title: "Boost Armor: A 10-Set Wearable Upgrade Chain"
+sidebarTitle: "Boost Armor"
+description: "Unlock and wear 10 progressively stronger armor sets in JPPrison. Each set provides real wearable pieces with per-level growth and a live progress bar."
+---
+
+Boost Armor is a chain of 10 wearable armor sets that players unlock sequentially. Each set provides real in-game armor with increasing bonuses as you progress through the chain — early sets give you a foothold, while the later sets offer serious economy advantages that compound with your other upgrades.
+
+## How It Works
+
+Boost Armor follows a strict sequential unlock path:
+
+- There are **10 armor sets** that unlock in order, from Set 1 through Set 10
+- Each set includes **four wearable pieces**: helmet, chestplate, leggings, and boots
+- Wearing the **full set** activates its complete bonus; wearing partial pieces may grant partial bonuses depending on your configuration
+- A **live progress bar** in the armor menu shows exactly how close you are to meeting the current set's requirements
+
+<Info>
+  You must unlock each set in order — you cannot skip ahead to Set 5 without first purchasing Sets 1 through 4.
+</Info>
+
+## Armor Menu
+
+Open the armor menu with `/armor` or `/armors`. The menu shows:
+
+- Your **current active set** and which pieces you have equipped
+- The **cost to unlock** the next set
+- A **live visual progress bar** tracking your completion of the current set's requirements
+- A preview of the **bonuses** each upcoming set provides
+
+## Unlocking Sets
+
+Purchase the next armor set directly from the `/armor` menu using your configured economy currency. Each successive set costs progressively more, reflecting the stronger bonuses it provides.
+
+<Tip>
+  Save up before going for the higher-numbered sets — the cost jumps significantly between sets 7 and 10, but the economy bonuses make the investment worthwhile.
+</Tip>
+
+## Per-Level Growth
+
+Each armor set has configurable stats that scale with its set number. As you work through the chain you gain:
+
+| Set Range | Typical Benefits |
+|---|---|
+| Sets 1 – 3 | Basic protection, small economy multipliers |
+| Sets 4 – 6 | Moderate protection, noticeable sell/token bonuses |
+| Sets 7 – 9 | Strong protection, significant economy multipliers |
+| Set 10 | Maximum protection, top-tier economy bonuses |
+
+Exact values for each set are defined in `plugins/JPPrison/armors.yml`.
+
+## Progress Bars
+
+The armor menu renders a live visual bar for each set showing how close you are to completing that set's unlock requirements. The bar updates in real time as your economy balances change — no need to close and reopen the menu.
+
+## Admin Management
+
+Admins can reset a player's armor progress using:
+
+```
+/jpprison armor reset <player> [armor]
+```
+
+- **Omit** the `[armor]` argument to reset **all** armor sets for the player
+- **Specify** a set name to reset only that individual set
+
+**Examples:**
+
+```
+# Reset all armor progress for Steve
+/jpprison armor reset Steve
+
+# Reset only the third armor set for Steve
+/jpprison armor reset Steve set-3
+```
+
+<Warning>
+  Resetting armor progress is irreversible. The player will lose any currency already spent on the reset sets and must repurchase them from scratch.
+</Warning>
+
+## Configuration
+
+Edit `plugins/JPPrison/armors.yml` to adjust set names, unlock costs, materials, and bonus values.
+
+```yaml
+# Example armors.yml snippet
+armor-sets:
+  set-1:
+    display-name: "&7Iron Recruit Armor"
+    cost: 10000
+    currency: money
+    pieces:
+      helmet:
+        material: IRON_HELMET
+      chestplate:
+        material: IRON_CHESTPLATE
+      leggings:
+        material: IRON_LEGGINGS
+      boots:
+        material: IRON_BOOTS
+    bonuses:
+      sell-multiplier: 0.05
+      xp-multiplier: 0.03
+
+  set-10:
+    display-name: "&6Warden's Netherite Armor"
+    cost: 5000000
+    currency: money
+    pieces:
+      helmet:
+        material: NETHERITE_HELMET
+      chestplate:
+        material: NETHERITE_CHESTPLATE
+      leggings:
+        material: NETHERITE_LEGGINGS
+      boots:
+        material: NETHERITE_BOOTS
+    bonuses:
+      sell-multiplier: 0.50
+      xp-multiplier: 0.40
+```

@@ -1,0 +1,134 @@
+---
+title: "Custom Economies in JPPrison"
+sidebarTitle: "Economies"
+description: "JPPrison supports multiple custom currencies — Tokens, Gems, and any currency you define. Each economy has its own commands, leaderboard, and Vault bridge."
+---
+
+JPPrison ships with two built-in currencies — **Tokens** and **Gems** — but lets you define unlimited custom economies via YAML. Every economy gets its own command set, leaderboard, payment system, and optional Vault bridge the moment you add it to the server.
+
+## How Economies Work
+
+Every economy is a single YAML file stored in `plugins/JPPrison/economies/`. When JPPrison loads, it reads every file in that folder and registers a full command suite for each one automatically. Given an economy with `id: crystals`, the plugin generates all of the following commands with no extra configuration:
+
+| Command | Description |
+|---|---|
+| `/crystals` | Display your current Crystals balance |
+| `/crystals top` | Show the Crystals leaderboard |
+| `/crystals pay <player> <amount>` | Send Crystals to another player |
+| `/crystals give <player> <amount>` | Admin: add Crystals to a player |
+| `/crystals remove <player> <amount>` | Admin: deduct Crystals from a player |
+| `/crystals <player\|global> <multiplier> <time>` | Start a timed boost |
+
+The same pattern applies to every economy — replace `crystals` with any economy `id`.
+
+## Default Economies
+
+JPPrison includes two economies out of the box:
+
+| Economy | ID | How It's Earned |
+|---|---|---|
+| Tokens | `tokens` | Mining blocks, activating pickaxe enchants, and sell rewards |
+| Gems | `gems` | Premium currency — awarded via events, kits, or admin commands |
+
+Both are fully reconfigurable. You can edit their YAML files, change their display names, symbols, and colors, or disable them entirely.
+
+## Creating a Custom Economy
+
+<Steps>
+  <Step title="Open the GUI Economy Creator (recommended)">
+    Run `/jpprison economy` in-game. JPPrison opens a visual creator where you name the economy, pick a color, and set a symbol — no YAML editing required.
+  </Step>
+  <Step title="Or create the YAML file manually">
+    Create a new file in `plugins/JPPrison/economies/`. The filename must match the economy `id`. For example, `crystals.yml`:
+
+    ```yaml
+    id: crystals
+    name: Crystals
+    symbol: "✦"
+    color: "&b"
+    decimals: 0
+    vault: false
+    ```
+
+    | Field | Description |
+    |---|---|
+    | `id` | Unique identifier — drives all generated commands |
+    | `name` | Display name shown in chat and GUIs |
+    | `symbol` | Character prepended to balances (e.g. `✦ 1,500`) |
+    | `color` | Minecraft color code applied to the currency name |
+    | `decimals` | Decimal places shown in balances (`0` for whole numbers) |
+    | `vault` | Set to `true` to expose this economy to Vault-compatible plugins |
+  </Step>
+  <Step title="Reload the plugin">
+    Run `/jpprison reload` to pick up the new file. JPPrison registers all commands for the new economy immediately — no server restart needed.
+  </Step>
+  <Step title="Use your new economy">
+    Your economy is live. Try `/crystals` to check your balance or `/crystals top` to see the leaderboard — both commands are available the moment the reload completes.
+  </Step>
+</Steps>
+
+## Vault Integration
+
+Setting `vault: true` on an economy exposes it to any plugin that hooks into the [Vault](https://github.com/MilkBowl/Vault) economy API — shop plugins, auction houses, and permission plugins that charge on rank-up.
+
+```yaml
+id: tokens
+name: Tokens
+symbol: "⬡"
+color: "&e"
+decimals: 0
+vault: true   # This economy is the Vault economy
+```
+
+<Warning>
+  Only **one** economy can be the Vault economy at a time. If you set `vault: true` on multiple files, JPPrison uses the first one it loads and warns you in the console. Review your economy files and ensure only one has `vault: true`.
+</Warning>
+
+## Timed Boosts
+
+You can apply a temporary earnings multiplier to a single player or every online player using the timed boost command built into every economy:
+
+```
+/<economy> <player|global> <multiplier> <time>
+```
+
+**Player boost — double Tokens for 1 hour:**
+
+```
+/tokens SteveG 2x 1h
+```
+
+**Global boost — 1.5× Gems for 30 minutes:**
+
+```
+/gems global 1.5x 30m
+```
+
+Supported time units are `s` (seconds), `m` (minutes), and `h` (hours). Boosts stack with the prestige multiplier but are capped by the `max-multiplier` setting in `config.yml`. Active boosts are shown in the `/prison` HUD.
+
+<Tip>
+  Use global boosts as scheduled events or vote rewards to keep players engaged during peak hours.
+</Tip>
+
+## Economy Leaderboards
+
+Every economy automatically tracks balances server-wide and exposes a top-10 leaderboard:
+
+```
+/tokens top
+/gems top
+/crystals top
+```
+
+The leaderboard updates in real time and is also available as a configurable hologram placeholder for display boards in your prison mine lobbies.
+
+## Player Payments
+
+Players can trade any economy currency directly with each other using the `pay` subcommand:
+
+```
+/tokens pay Alex 5000
+/gems pay Notch 250
+```
+
+Payments are instant and logged. You can restrict the `pay` command per-economy by removing the relevant permission node (`jpprison.economy.<id>.pay`) from your permissions plugin.

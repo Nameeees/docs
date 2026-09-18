@@ -1,0 +1,56 @@
+---
+title: "Defining Custom Economies in economies/"
+sidebarTitle: "Economies Config"
+description: "Create unlimited custom currencies for JPPrison by adding YAML files to the economies/ folder. Each economy auto-generates its own commands and leaderboard."
+---
+
+Each economy in JPPrison is a single YAML file in `plugins/JPPrison/economies/`. Add a file, reload, and the economy is live — complete with balance commands, leaderboard, and player payments.
+
+## Economy YAML Fields
+
+The example below shows every available field for a custom currency called Crystals.
+
+```yaml
+# plugins/JPPrison/economies/crystals.yml
+id: crystals           # used in commands: /crystals, /crystals pay, etc.
+name: Crystals         # display name in menus and messages
+symbol: "✦"            # prefix shown next to balances
+color: "&b"            # chat color code for this economy
+decimals: 0            # decimal places (0 = whole numbers only)
+vault: false           # true to expose as the Vault economy
+start-balance: 0       # balance new players start with
+```
+
+## Field Reference
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `id` | String | — | Unique identifier. Used in commands (`/crystals`, `/crystals pay`), autosell keys, and internal references. Must be lowercase with no spaces. |
+| `name` | String | — | Human-readable display name shown in menus, chat, and leaderboards. |
+| `symbol` | String | — | Short symbol or icon prepended to balance displays (e.g. `✦ 1,500`). |
+| `color` | String | `"&f"` | Bukkit `&` color code applied to this economy's name and balance in chat. |
+| `decimals` | Integer | `0` | Number of decimal places to show. Use `0` for whole-number currencies and `2` for coin-style currencies. |
+| `vault` | Boolean | `false` | Exposes this economy to Vault so other plugins can read and write balances. Only one economy should have this set to `true`. |
+| `start-balance` | Number | `0` | Starting balance granted to new players when they first join. |
+
+## In-Game Creator
+
+Use `/jpprison economy` to open a GUI-based economy creator. This is the fastest way to set up a new economy without editing files directly — the menu writes the YAML file for you.
+
+```
+/jpprison economy
+```
+
+## Applying Changes
+
+After adding or editing an economy file, save it and run:
+
+```
+/jpprison reload
+```
+
+The new economy is immediately available in commands, menus, autosell, and any other system that references it by `id`.
+
+<Warning>
+  Only one economy can have `vault: true` at a time. Setting a second economy to `vault: true` will override the first, which may break plugins that depend on Vault balances. Check your `config.yml` `vault.economy-id` setting as well — it must match the economy you want to expose.
+</Warning>

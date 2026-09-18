@@ -1,0 +1,89 @@
+---
+title: "Autominer: Your Personal Mining Clone"
+sidebarTitle: "Autominer"
+description: "The Autominer is a visible NPC wearing your skin that mines the prison on your behalf. It pays full rewards and supports 10 permanent upgrade modules."
+---
+
+The Autominer is a visible clone that wears your player skin and mines the prison just like you would — earning the same economy rewards, XP, and triggering the same enchant effects while you're away.
+
+## How It Works
+
+When you activate the Autominer, the clone spawns at your current location and walks through the mine area, breaking blocks as it goes. Every block the clone breaks counts as if you broke it yourself: autosell pays out, enchants trigger, and block counters increment. The Autominer runs for a fixed duration based on the time you have available, then stops automatically when that time is exhausted.
+
+Open the Autominer management menu at any time with:
+
+```
+/autominer
+```
+
+or the alias:
+
+```
+/miner
+```
+
+## Getting Miner Time
+
+Admins grant Autominer time to players using:
+
+```
+/jpprison autominer give <player> <time>
+```
+
+The `<time>` argument accepts the following formats:
+
+| Format | Example | Meaning |
+|--------|---------|---------|
+| Seconds | `30s` | 30 seconds |
+| Minutes | `10m` | 10 minutes |
+| Minutes (compound) | `2:30m` | 2 minutes 30 seconds |
+| Hours | `2h` | 2 hours |
+| Days | `1d` | 1 day |
+
+**Example** — give Steve two hours of Autominer time:
+
+```
+/jpprison autominer give Steve 2h
+```
+
+## Upgrade Modules
+
+The Autominer has **10 permanent upgrade modules** that you purchase directly from the `/autominer` menu using your economy balance. Each module improves a specific aspect of your clone's performance:
+
+- **Speed** — how fast the clone moves through the mine
+- **Earnings Multiplier** — scales the economy payout per block
+- **Area Size** — expands the zone the clone searches for blocks
+- and more, depending on your server's configuration
+
+Upgrades persist permanently — they are never reset between sessions or when your Autominer time runs out.
+
+Upgrade module definitions live in `plugins/JPPrison/autominer-upgrades/`.
+
+## Configuration
+
+| File | Purpose |
+|------|---------|
+| `plugins/JPPrison/autominer.yml` | Main Autominer settings |
+| `plugins/JPPrison/autominer-upgrades/` | Upgrade module definitions |
+
+Key settings you will want to review in `autominer.yml`:
+
+- **Movement speed** — how quickly the clone traverses the mine
+- **Block break interval** — ticks between each block break
+- **Reward multiplier** — global earnings multiplier applied to all payouts
+
+After editing either location, run `/jpprison reload` to apply your changes.
+
+## Diagnosing Issues
+
+If your Autominer is not behaving as expected, run:
+
+```
+/jpprison autominer check
+```
+
+This command reports the miner's current state and inspects the `jpprison-enchants` WorldGuard flag at your location so you can confirm rewards are enabled.
+
+<Tip>
+Combine the Autominer with Timed Boosts for maximum earnings while offline. A boost active during an Autominer session multiplies every payout the clone generates.
+</Tip>

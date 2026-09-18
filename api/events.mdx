@@ -1,0 +1,83 @@
+---
+title: "JPPrison Events: BalanceChangeEvent"
+sidebarTitle: "Events"
+description: "Listen for BalanceChangeEvent to react to or cancel economy transactions in JPPrison. The event fires before every balance write and includes a TransactionCause."
+---
+
+JPPrison fires a `BalanceChangeEvent` before every economy balance write. You can listen to this event to react to transactions, log them, or cancel them entirely.
+
+## BalanceChangeEvent
+
+Register a standard Bukkit `@EventHandler` in any plugin that depends on JPPrison:
+
+```java
+@EventHandler
+public void onBalanceChange(BalanceChangeEvent event) {
+    UUID player   = event.getPlayerUUID();
+    String economy = event.getEconomy();      // e.g. "tokens"
+    double amount  = event.getAmount();       // positive = give, negative = take
+    TransactionCause cause = event.getCause(); // WHY the change is happening
+
+    // Cancel a specific cause
+    if (cause == TransactionCause.AUTOSELL && economy.equals("gems")) {
+        event.setCancelled(true); // prevent gems from autosell payouts
+    }
+}
+```
+
+### Available Methods
+
+| Method | Return Type | Description |
+|---|---|---|
+| `event.getPlayerUUID()` | `UUID` | The UUID of the player whose balance is changing |
+| `event.getEconomy()` | `String` | The economy ID (e.g. `"tokens"`, `"gems"`) |
+| `event.getAmount()` | `double` | The change amount — positive for credits, negative for debits |
+| `event.getCause()` | `TransactionCause` | The reason this balance change is occurring |
+| `event.setCancelled(true)` | `void` | Cancel the transaction entirely |
+| `event.isCancelled()` | `boolean` | Check whether the event has already been cancelled |
+
+---
+
+## TransactionCause
+
+Every `BalanceChangeEvent` carries a `TransactionCause` that tells you exactly why the balance is changing. Use it to selectively react to or block specific sources.
+
+| Cause | Trigger |
+|---|---|
+| `AUTOSELL` | Block sold via autosell |
+| `MANUAL_SELL` | Block sold via `/sell` or `/sellall` |
+| `ADMIN_GIVE` | Admin used `/<economy> give` |
+| `API_GIVE` | `JPPrisonAPI.give()` was called |
+| `BOMB` | Bomb payout |
+| `DRILL` | Drill payout |
+| `AUTOMINER` | Autominer payout |
+| `MINION` | Minion payout |
+| `ENCHANT` | Enchant reward |
+
+---
+
+## Cancelling Transactions
+
+Calling `event.setCancelled(true)` prevents the balance change entirely. The player receives no currency for that transaction and no error is shown to them by default.
+
+```java
+@EventHandler
+public void onBalanceChange(BalanceChangeEvent event) {
+    // Example: block all economy payouts for a specific player (e.g. during a ban)
+    if (bannedPlayers.contains(event.getPlayerUUID())) {
+        event.setCancelled(true);
+        return;
+    }
+
+    // Example: log every admin-issued currency grant to a file
+    if (event.getCause() == TransactionCause.ADMIN_GIVE) {
+        logger.info("[Economy Log] Admin gave " + event.getAmount()
+            + " " + event.getEconomy()
+            + " to " + event.getPlayerUUID());
+    }
+}
+```
+
+<Warning>
+  Cancelling events from `API_GIVE` will also cancel calls made by `JPPrisonAPI.tryPurchase()`. Make sure your cancellation logic does not unintentionally block legitimate shop purchases made through the API.
+</Warning>

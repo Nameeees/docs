@@ -1,0 +1,68 @@
+---
+title: "JPPrison Configuration File Overview"
+sidebarTitle: "Overview"
+description: "All JPPrison settings live in plugins/JPPrison/. Learn which file controls what, how auto-migration works, and how to reload configs without restarting."
+---
+
+Every JPPrison setting is controlled by YAML files in `plugins/JPPrison/`. You never need to recompile or restart the server to apply changes — run `/jpprison reload` after saving any file.
+
+## File Map
+
+The table below covers every file and folder in `plugins/JPPrison/` and what it controls.
+
+| File / Folder | Purpose |
+|---|---|
+| `config.yml` | Core settings: pickaxe curve, prestige, boosts, features, Vault, backups |
+| `messages.yml` | All chat messages and format strings |
+| `autosell.yml` | Per-block sell prices and XP rewards |
+| `economies/` | One YAML file per economy (id, name, symbol, color, decimals) |
+| `enchants/` | One YAML file per enchant (levels, costs, chances, FX, prestige) |
+| `menus/` | Every menu layout and UI string |
+| `colors/` | Pickaxe lore color themes |
+| `shards.yml` / `runes.yml` | Socketable boost definitions |
+| `pets.yml` | Pets, levels, boosts, armor colors, lucky blocks |
+| `armors.yml` | Boost armor chain |
+| `bombs.yml` / `drills.yml` | Throwable/placeable tool types |
+| `autominer.yml` + `autominer-upgrades/` | Clone miner settings and modules |
+| `minions.yml` + `minions/` + `minion-upgrades/` | Mini-mob crew settings, types, and modules |
+| `loot-chests.yml`, `minigames.yml`, `animations.yml`, `sounds.yml` | Loot chest system |
+| `orbs.yml` / `remnants.yml` | XP orb and enchant remnant item appearance |
+| `backups/` | Automatic zip backups (database + all configs) |
+
+## Auto-Migration
+
+Every config file carries a `config-version` field. When you update JPPrison to a new version, configs are migrated automatically on startup — your edits and comments are preserved. You never need to manually transfer settings between versions.
+
+## Reloading
+
+Run `/jpprison reload` to reload all config files, messages, economies, and menus without restarting the server. Changes take effect immediately for all online players.
+
+```
+/jpprison reload
+```
+
+## Backups
+
+JPPrison automatically creates zip backups of the database and all configs on a configurable schedule. Find them in `plugins/JPPrison/backups/`. To create an immediate backup at any time, run:
+
+```
+/jpprison backup
+```
+
+You can adjust the backup interval and how many backups to keep in `config.yml`. See the [config.yml reference](/configuration/config-yml) for details.
+
+## Feature Flags
+
+Many systems can be toggled on or off in `config.yml` under their respective `enabled:` keys. Disabling a module completely unloads its functionality — useful for tailoring JPPrison to your server's exact feature set without sacrificing performance.
+
+```yaml
+features:
+  pets: true
+  autominer: true
+  minions: true
+  loot-chests: true
+  momentum: true
+  boost-armor: true
+  shards: true
+  runes: true
+```

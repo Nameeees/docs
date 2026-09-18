@@ -1,0 +1,119 @@
+---
+title: "Pets: Floating Companions with Mining Boosts"
+sidebarTitle: "Pets"
+description: "JPPrison includes 13 floating-head pets with leveling, per-economy boosts, particle trails, mini armor, and offline-safe textures. Unlock them via lucky blocks."
+---
+
+Pets are floating head companions that follow you through the prison, providing passive economy and XP boosts as they level up. The more you mine with a pet equipped, the stronger it becomes — making pets a long-term investment that pays off the deeper you go into your sentence.
+
+## Available Pets
+
+JPPrison includes **13 pets**, each with a unique floating-head design. All textures are stored offline so skins never break on server restart — your pet looks the same whether the Mojang skin servers are reachable or not.
+
+<Info>
+  The `boomber` pet is free and available to every player by default — no unlock required.
+</Info>
+
+## Pet Menu
+
+Open the pet menu with `/pets` or `/pet`. From the menu you can:
+
+- **Equip** a pet to start following you
+- **Unequip** your active pet
+- **Customize** your pet's armor and particle trail
+
+## Pet Levels
+
+Pets level up automatically as you mine with them equipped. Higher levels grant stronger economy and XP boost multipliers. All level thresholds and boost values are configured in `plugins/JPPrison/pets.yml`.
+
+<Tip>
+  Keep a pet equipped during long mining sessions — passive level-up progress adds up fast and unlocks noticeably stronger boosts at higher tiers.
+</Tip>
+
+## Boosts
+
+Each pet provides per-economy boost multipliers that apply to your earnings while the pet is equipped. Boosts scale with pet level.
+
+**Example:** a Tokens pet at level 10 might grant **+25% token earnings** on every block you mine.
+
+Because boosts are per-economy, different pets complement different playstyles — a Money pet benefits players focused on the sell economy, while a Tokens pet is ideal for upgrade grinders.
+
+## Mini Armor
+
+Pets can wear custom armor sets, giving them a fully kitted-out look as they float beside you. To access the pet armor customization menu you need the `jpprison.pet.armor` permission. Armor colors and available sets are configured in `pets.yml`.
+
+## Particle Trails
+
+Each pet supports configurable particle trail animations that play as it follows you. Trails are defined per-pet in `pets.yml` and can be customized to match the pet's theme.
+
+## Unlocking Pets
+
+<Steps>
+  <Step title="Earn Lucky Blocks">
+    Players receive pet unlock lucky blocks through normal gameplay (mining milestones, events, etc.) or via admin gifts.
+  </Step>
+  <Step title="Open Your Lucky Block">
+    Use the lucky block from your inventory to roll for a pet unlock. The chances for each pet are configured in `pets.yml`.
+  </Step>
+  <Step title="Equip Your New Pet">
+    Once unlocked, open `/pets` and equip your new companion.
+  </Step>
+</Steps>
+
+**Admin commands:**
+
+Give a pet unlock item to a player directly:
+
+```
+/pets give <player> <pet-id>
+```
+
+**Example:**
+
+```
+/pets give Steve boomber
+```
+
+You can also grant access to a specific pet without an unlock item by assigning the permission:
+
+```
+jpprison.pet.<id>
+```
+
+This permission defaults to **op only**.
+
+## Configuration
+
+Edit `plugins/JPPrison/pets.yml` to adjust:
+
+| Setting | Description |
+|---|---|
+| `levels` | XP thresholds and boost values per level |
+| `boosts` | Per-economy multiplier values |
+| `armor` | Available armor sets and color codes |
+| `particles` | Trail animation types and settings |
+| `lucky-block-chances` | Drop weight for each pet in lucky blocks |
+
+```yaml
+# Example pets.yml snippet
+pets:
+  boomber:
+    free: true
+    levels:
+      1:
+        xp-required: 0
+        boosts:
+          tokens: 0.05
+          money: 0.03
+      10:
+        xp-required: 50000
+        boosts:
+          tokens: 0.25
+          money: 0.15
+    particles:
+      type: FLAME
+      density: 5
+    armor:
+      helmet-color: "FF4500"
+      chestplate-color: "FF4500"
+```

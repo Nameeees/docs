@@ -1,47 +1,139 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Get Started with JPPrison in 5 Minutes"
+sidebarTitle: "Quick Start"
+description: "Go from a fresh JPPrison install to a fully working prison mine with economies and rewards in five minutes using this step-by-step guide."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
+Once JPPrison is installed and your server has booted, this guide walks you through standing up a fully working prison mine — complete with block prices, economies, and pickaxe rewards — from scratch. By the end you will have a region where players can mine, earn currency, and level up their pickaxes.
 
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
-
-## Prerequisites
-
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+If you haven't installed JPPrison yet, start with the [Installation guide](/installation) first.
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+  <Step title="Create Your Mine Region">
+    Use WorldGuard to define the boundaries of your mine. Select the two corners of your mine with the WorldEdit wand (`//wand`), then create the region:
 
     ```bash
-    npm install your-package
+    /rg define <region-name>
     ```
+
+    Next, enable JPPrison enchant rewards inside that region so players earn currency and XP when they mine there:
+
+    ```bash
+    /rg flag <region-name> jpprison-enchants allow
+    ```
+
+    Without this flag, pickaxe enchants fire visually but no rewards are paid out. Any region without the flag is treated as a non-rewarding zone (useful for spawn or free-roam areas).
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+  <Step title="Set Block Prices">
+    Open `plugins/JPPrison/autosell.yml` and define how much each block type pays into your economy when mined. For example:
 
-    ```bash
-    your-cli init
+    ```yaml
+    # plugins/JPPrison/autosell.yml
+    economy: tokens       # which economy receives the proceeds
+
+    blocks:
+      STONE: 10
+      COAL_ORE: 50
+      IRON_ORE: 100
+      GOLD_ORE: 250
+      DIAMOND_ORE: 1000
     ```
+
+    You can route different block types to different economies (e.g., common blocks pay Tokens while rare ores pay Gems) by adding an `economy` key per block entry. See the Autosell documentation for the full syntax.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
+  <Step title="Configure Economies">
+    JPPrison creates default economy files in `plugins/JPPrison/economies/` on first boot (typically `tokens.yml` and `gems.yml`). Open them to adjust starting balances, display names, and reward multipliers.
+
+    To create a brand-new custom currency in-game without editing files, use:
 
     ```bash
-    your-cli start
+    /jpprison economy create <name>
     ```
+
+    This scaffolds a new economy file which you can then fine-tune in the `economies/` folder. Each economy is completely independent — its own balance storage, rewards, and optional Vault bridge.
+  </Step>
+  <Step title="Adjust Core Settings">
+    Open `plugins/JPPrison/config.yml` to tune the global behaviour of JPPrison:
+
+    ```yaml
+    # plugins/JPPrison/config.yml
+
+    pickaxe:
+      xp-curve: EXPONENTIAL    # LINEAR, EXPONENTIAL, or FLAT
+      base-xp-per-block: 1
+      level-cap: 100
+
+    prestige:
+      enabled: true
+      requirement-type: BLOCKS  # BLOCKS or BALANCE
+      base-requirement: 100000  # blocks or balance needed for first prestige
+
+    features:
+      pets: true
+      minions: true
+      autominer: true
+      loot-chests: true
+      momentum: true
+    ```
+
+    Toggle any feature you don't want to use to `false` — JPPrison won't register its commands or listeners, keeping your server lean.
+  </Step>
+  <Step title="Reload & Test">
+    Apply all your config changes without restarting:
+
+    ```bash
+    /jpprison reload
+    ```
+
+    Then give yourself a set of test items to verify every system is working:
+
+    ```bash
+    # Grant 1 000 orbs (pickaxe XP currency)
+    /jpprison orb give <player> 1000
+
+    # Grant 3 Power Shards
+    /jpprison shard give <player> power-shard 3
+
+    # Grant 5 Nuke bombs
+    /jpprison bomb give <player> nuke 5
+
+    # Grant 10 minutes of autominer time
+    /jpprison autominer give <player> 10m
+
+    # Grant a Zombie minion with 10 minutes of fuel and tier 2
+    /jpprison minion give <player> zombie 10m 2
+    ```
+
+    Use each item in your mine region to confirm it behaves as expected and pays into the correct economy.
+  </Step>
+  <Step title="Verify Everything Works">
+    Head into the mine region you created and start mining. You should see:
+
+    - **Autosell messages** in chat showing how much currency each block paid.
+    - **XP gain** feedback on your pickaxe (action bar or chat, depending on your config).
+    - **Combo/Momentum** counter ticking up if you mine without stopping.
+
+    If something isn't triggering, double-check that the `jpprison-enchants allow` flag is set on the correct region and that the block types you're mining have prices in `autosell.yml`.
   </Step>
 </Steps>
 
 <Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
-
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
+  Players can run `/prison balance` at any time to see their current balance across all active JPPrison economies. Point new players to this command first — it is the quickest way to verify that autosell and rewards are flowing correctly.
 </Tip>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Pickaxe Enchants" icon="wand-magic-sparkles" href="/systems/pickaxe-enchants">
+    Explore all 35 built-in enchantments, configure level caps and unlock requirements, and create custom enchant reward tables.
+  </Card>
+  <Card title="Economies" icon="coins" href="/systems/economies">
+    Set up multiple currencies, configure reward routing, and bridge an economy to Vault for use with shop plugins.
+  </Card>
+  <Card title="Pets" icon="paw" href="/progression/pets">
+    Define pet bonuses, configure levelling curves, and set up the pet gacha or drop system to reward active miners.
+  </Card>
+  <Card title="Commands Reference" icon="terminal" href="/commands">
+    A full list of every JPPrison command, its syntax, required permissions, and example usage.
+  </Card>
+</CardGroup>

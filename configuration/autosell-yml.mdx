@@ -1,0 +1,79 @@
+---
+title: "autosell.yml: Block Prices and XP Configuration"
+sidebarTitle: "autosell.yml"
+description: "Define per-block sell prices and XP rewards in autosell.yml. All mining tools — enchants, bombs, drills, autominer, and minions — use these prices."
+---
+
+`autosell.yml` is the single source of truth for all block prices. Every mining tool in JPPrison — enchants, bombs, drills, autominer, and minions — uses these prices for payouts.
+
+## Basic Block Entry
+
+Add each block you want to sell under the `blocks` key. Use the Bukkit Material name as the key, then set a `price` and `xp` reward.
+
+```yaml
+blocks:
+  STONE:
+    price: 10
+    xp: 1
+  IRON_ORE:
+    price: 150
+    xp: 5
+  GOLD_ORE:
+    price: 500
+    xp: 10
+  DIAMOND_ORE:
+    price: 2500
+    xp: 20
+  EMERALD_ORE:
+    price: 10000
+    xp: 50
+```
+
+| Key | Type | Description |
+|---|---|---|
+| `price` | Number | Sell value paid into the default economy |
+| `xp` | Number | Pickaxe XP awarded when this block is sold |
+
+## Multiple Economy Payouts
+
+You can pay into multiple economies at once by adding extra economy ID keys alongside `price`. Each key must match the `id` of an economy file in `plugins/JPPrison/economies/`.
+
+```yaml
+blocks:
+  GOLD_ORE:
+    price: 500          # default economy (tokens)
+    xp: 10
+    tokens: 500
+    gems: 1
+    crystals: 5
+```
+
+In the example above, mining and selling a Gold Ore pays 500 tokens, 1 gem, and 5 crystals simultaneously. The `price` key targets the default economy configured in `config.yml`.
+
+## Block Name Format
+
+Use Bukkit Material names — all uppercase letters with underscores between words. For blocks introduced in Minecraft 1.13 or later, use the modern name (e.g. `DEEPSLATE_IRON_ORE` rather than a legacy ID). JPPrison handles version differences internally so the same config works across supported server versions.
+
+**Examples of valid material names:**
+
+```
+STONE
+COBBLESTONE
+IRON_ORE
+DEEPSLATE_IRON_ORE
+ANCIENT_DEBRIS
+```
+
+## Applying Changes
+
+After editing `autosell.yml`, save the file and run:
+
+```
+/jpprison reload
+```
+
+New prices take effect immediately — no server restart needed.
+
+<Note>
+  Block prices affect every tool: manual sell, autosell, bombs, drills, autominer, and minions all reference this file. Changing a price here updates the payout across every system at once.
+</Note>

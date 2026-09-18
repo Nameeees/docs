@@ -1,0 +1,111 @@
+---
+title: "Autosell and Block Pricing in JPPrison"
+sidebarTitle: "Autosell"
+description: "Configure per-block sell prices and XP rewards in autosell.yml. Blocks are sold instantly on mining and can pay into multiple economies simultaneously."
+---
+
+Autosell is the engine behind all income in JPPrison — every block mined inside a rewards region is sold instantly at the price you configure in `autosell.yml`. No chest shops, no manual `/sell` step; the moment a block breaks, the value hits the player's balance.
+
+## Enabling and Disabling Autosell
+
+Players control autosell themselves using a simple toggle:
+
+| Command | Alias | Description |
+|---|---|---|
+| `/autosell` | `/as` | Toggle autosell on or off for yourself |
+| `/sell` | — | Manually sell the item currently in your hand |
+| `/sellall` | `/sa` | Manually sell every sellable item in your inventory |
+
+When autosell is **off**, blocks still drop as items normally — players use `/sellall` to cash out at the end of a mining session. When autosell is **on**, blocks never reach the inventory at all; they sell at the instant of the break.
+
+<Tip>
+  Consider granting `/autosell` to all players by default and enabling it on join via a starter kit. Most players prefer the seamless experience of instant selling.
+</Tip>
+
+## Configuring Block Prices
+
+Open `plugins/JPPrison/autosell.yml` to set the sell price and XP reward for every mineable block. Each block is identified by its Bukkit material name:
+
+```yaml
+blocks:
+  STONE:
+    price: 10
+    xp: 1
+  IRON_ORE:
+    price: 150
+    xp: 5
+  DIAMOND_ORE:
+    price: 2500
+    xp: 20
+  EMERALD_ORE:
+    price: 10000
+    xp: 50
+```
+
+| Field | Description |
+|---|---|
+| `price` | Amount of the primary economy (Tokens by default) paid per block |
+| `xp` | Pickaxe XP awarded per block mined |
+
+After editing the file, run `/jpprison reload` to apply your changes without restarting the server.
+
+<Note>
+  Use Bukkit material names in ALL_CAPS (e.g., `DIAMOND_ORE`, `DEEPSLATE_COAL_ORE`). You can find a full list of valid material names in the [Bukkit Material documentation](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html).
+</Note>
+
+## XP Rewards
+
+The `xp` field on each block grants **pickaxe XP** — the experience used to level up the pickaxe and unlock new enchants. Higher-tier ores should always award more XP to keep progression meaningful:
+
+- Low-tier blocks like `STONE` award `1` XP → fast to mine, low reward.
+- Mid-tier blocks like `IRON_ORE` award `5` XP → moderate progression speed.
+- High-tier blocks like `EMERALD_ORE` award `50` XP → reserved for end-game mines.
+
+Tuning the `xp` values alongside block prices is how you control the pacing of your server's progression curve. If players are reaching max level too quickly, lower the `xp` values on common blocks.
+
+## Multi-Economy Payouts
+
+You can configure any block to pay into multiple economies simultaneously. Add the economy `id` as an extra field alongside `price` and `xp`:
+
+```yaml
+blocks:
+  GOLD_ORE:
+    price: 500    # Paid into the primary (Vault) economy
+    xp: 10
+    tokens: 5     # Also pays 5 Tokens per block
+    gems: 1       # Also pays 1 Gem per block
+```
+
+Each field name must exactly match the `id` of a loaded economy in `plugins/JPPrison/economies/`. You can stack as many economies as you like on a single block — every one listed is paid out simultaneously on each mine event.
+
+<Tip>
+  Use multi-economy payouts to make rare ores feel genuinely special. A block that pays `price`, `tokens`, AND `gems` all at once creates memorable moments that keep players engaged.
+</Tip>
+
+## WorldGuard Flag Gate
+
+Autosell rewards only trigger inside WorldGuard regions where the `jpprison-enchants` flag is set to `allow`. Blocks broken **outside** those regions still break and drop items normally, but no sell income or XP is awarded.
+
+To activate autosell rewards in a region:
+
+```
+/rg flag <region-name> jpprison-enchants allow
+```
+
+This design lets you have free-build zones, player plots, or event arenas where the economy does not apply — players can't exploit cheap blocks in unprotected areas for infinite income.
+
+<Warning>
+  If players report that autosell is not working in a mine, check the region flags first. The `jpprison-enchants` flag must be explicitly set to `allow` — it does **not** inherit from parent regions by default.
+</Warning>
+
+## Earnings Recap
+
+JPPrison automatically posts a chat summary of each player's earnings at **1 minute** and **5 minutes** after they start mining. The summary shows total income, blocks mined, and top-earning enchants for that session window.
+
+For a live breakdown at any time, run:
+
+```
+/earn
+```
+
+The `/earn` board ranks every active enchant by total income generated this session, showing you exactly which enchants are pulling their weight and which upgrades will give you the best return.

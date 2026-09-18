@@ -1,0 +1,122 @@
+{
+  "projectType": "saas",
+  "projectName": "JPPrison",
+  "projectDescription": "An all-in-one Minecraft Prison server plugin featuring enchanted pickaxes, multiple economies, pets, minions, autosell, prestige, loot chests, and more — running on Spigot/Paper 1.8.8 through the latest release.",
+  "theme": "maple",
+  "primaryColor": "#ef7025",
+  "lightColor": "#eec9bc",
+  "darkColor": "#4fa1ab",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Core Systems",
+            "pages": [
+              "systems/economies",
+              "systems/pickaxe-enchants",
+              "systems/autosell",
+              "systems/prestige"
+            ]
+          },
+          {
+            "group": "Mining Tools",
+            "pages": [
+              "tools/bombs-drills",
+              "tools/autominer",
+              "tools/minions"
+            ]
+          },
+          {
+            "group": "Progression",
+            "pages": [
+              "progression/pets",
+              "progression/boost-armor",
+              "progression/shards-runes",
+              "progression/loot-chests",
+              "progression/momentum"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "configuration/overview",
+              "configuration/config-yml",
+              "configuration/autosell-yml",
+              "configuration/economies",
+              "configuration/enchants",
+              "configuration/menus"
+            ]
+          },
+          {
+            "group": "Commands & Permissions",
+            "pages": [
+              "commands/player-commands",
+              "commands/admin-commands",
+              "commands/permissions"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Developer API",
+        "groups": [
+          {
+            "group": "API Reference",
+            "pages": [
+              "api/overview",
+              "api/economy-api",
+              "api/events",
+              "api/placeholders"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "35 bundled pickaxe enchants with visual upgrade menu and per-enchant prestige",
+    "Multiple custom economies (Tokens, Gems, and any custom currency) with Vault bridge",
+    "Instant autosell with per-block prices and XP rewards",
+    "Autominer clone that walks the mine wearing your skin",
+    "Minions (zombie, pigman, villager) that mine independently",
+    "13 floating-head pets with levels, boosts, and particle trails",
+    "Socketable shards & runes with 13 effect types",
+    "10-set boost armor unlock chain with live progress bars",
+    "Loot chests with holograms, animations, and five bonus minigames",
+    "Momentum combo multiplier with milestone celebrations",
+    "Timed boosts for XP and economies (per-player or global)",
+    "Top-10 leaderboards for blocks, XP, and every economy",
+    "Fully data-driven: all features configurable via YAML with live reload",
+    "Versioned auto-migrations with automatic backups",
+    "PlaceholderAPI integration with full player/server stat exposure"
+  ],
+  "publicApiSurface": [
+    "com.jpprison.economy.JPPrisonAPI.getBalance(UUID)",
+    "com.jpprison.economy.JPPrisonAPI.has(UUID, double, String)",
+    "com.jpprison.economy.JPPrisonAPI.give(UUID, double, String)",
+    "com.jpprison.economy.JPPrisonAPI.take(UUID, double, String)",
+    "com.jpprison.economy.JPPrisonAPI.tryPurchase(UUID, EconomyCost)",
+    "com.jpprison.economy.JPPrisonAPI.format(double, String)",
+    "com.jpprison.economy.JPPrisonAPI.getWorldGuardFlag()",
+    "BalanceChangeEvent (cancellable, with TransactionCause)",
+    "EconomyCost (parse cost strings like '500 tokens')",
+    "%jpprison_<variable>% PlaceholderAPI expansion",
+    "/jpprison reload",
+    "/jpprison orb give",
+    "/jpprison shard give",
+    "/jpprison bomb give",
+    "/jpprison drill give",
+    "/jpprison autominer give",
+    "/jpprison minion give"
+  ]
+}

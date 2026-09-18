@@ -1,0 +1,79 @@
+---
+title: "Bombs and Drills: Throwable and Placeable Mining Tools"
+sidebarTitle: "Bombs & Drills"
+description: "JPPrison bombs are throwable TNT skulls that blast large areas. Drills are placeable hoppers that mine automatically. Both pay full economy rewards."
+---
+
+JPPrison provides two supplemental mining tools — bombs (throwable TNT skulls) and drills (placeable block miners) — both fully configurable and both paying full economy rewards as if you mined the blocks yourself.
+
+## Bombs
+
+Bombs are throwable TNT skull items. Right-click to throw one and it will fly through the air before landing and detonating. When a bomb lands, it explodes a configurable area around the impact point, breaking every minable block inside the blast zone instantly.
+
+You can define multiple bomb types in `plugins/JPPrison/bombs.yml` — for example `basic`, `nuke`, and `meteor` — each with its own radius, shape, and visual animation.
+
+Every block a bomb breaks pays your autosell rewards and increments your block counters exactly as if you had broken each block by hand. After the explosion settles, you receive a single bulk summary message showing your total earnings from the blast.
+
+### Giving Bombs
+
+Admins grant bomb items using:
+
+```
+/jpprison bomb give <player> [type] [count]
+```
+
+### Diagnosing Issues
+
+If bombs are not paying rewards, run:
+
+```
+/jpprison bomb check
+```
+
+This command inspects the `jpprison-enchants` WorldGuard flag at your current location and reports any configuration problems.
+
+### Example Bomb Definition
+
+```yaml
+id: nuke
+name: "&cNuke Bomb"
+radius: 10
+shape: SPHERE
+animation: nuke
+```
+
+---
+
+## Drills
+
+Drills are placeable items that appear as hoppers in the world. When you place one, it automatically mines the area around it continuously, paying economy rewards for every block it breaks. You can define multiple drill types in `plugins/JPPrison/drills.yml`, each with its own radius, speed, and break rate.
+
+While a drill is placed it keeps mining independently — you do not need to stay nearby. When you pick the drill back up, you receive a bulk payout summary covering everything it mined during its lifetime.
+
+### Giving Drills
+
+Admins grant drill items using:
+
+```
+/jpprison drill give <player> [type] [count]
+```
+
+### Example Drill Definition
+
+```yaml
+id: basic-drill
+name: "&aDrill"
+radius: 3
+interval-ticks: 20
+blocks-per-tick: 5
+```
+
+---
+
+<Note>
+Both bombs and drills respect the `jpprison-enchants` WorldGuard flag. Place or throw them only inside reward regions to earn economy payouts. Outside those regions the blocks will still break, but no rewards will be issued.
+</Note>
+
+## Customizing Types
+
+Edit `plugins/JPPrison/bombs.yml` or `plugins/JPPrison/drills.yml` to add, remove, or adjust bomb and drill types, then run `/jpprison reload` to apply your changes without restarting the server.

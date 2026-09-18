@@ -1,0 +1,162 @@
+---
+title: "Loot Chests: Mining Rewards with Mini-Games"
+sidebarTitle: "Loot Chests"
+description: "Loot chests spawn while mining with holograms, custom animations, and sounds. Claim them for random rewards and choose from five bonus mini-games."
+---
+
+Loot chests are special reward chests that randomly appear as you mine. Each chest shows a hologram overhead, plays a custom animation, and offers one of five bonus mini-games when claimed — turning an ordinary mining session into a moment of excitement every time one surfaces in the rock.
+
+## How Chests Spawn
+
+Chests appear in the mine randomly based on configurable drop chances. When a chest spawns:
+
+1. A **hologram** appears floating above it to draw your attention
+2. A **spawn animation** plays (defined in `animations.yml`)
+3. A **custom sound** cues to alert nearby players (defined in `sounds.yml`)
+
+The global spawn rate and per-chest-type weights are all tunable in `loot-chests.yml`.
+
+<Info>
+  Chest spawning is per-mine and per-block-break, so higher-tier mines with faster mining speeds will naturally surface chests more often in absolute terms.
+</Info>
+
+## Claiming a Chest
+
+Walk up to a spawned chest and **right-click** it to claim it. A claim summary appears showing:
+
+- The **base rewards** you earned from the chest's reward table
+- The **bonus mini-game** you can play for additional prizes
+
+You must claim a chest before it despawns — unclaimed chests disappear after the configured timeout.
+
+## Bonus Mini-Games
+
+Every chest claim triggers one of **five bonus mini-games**, each offering prizes beyond the base chest contents. The active mini-games and their reward tables are defined in `minigames.yml`.
+
+<AccordionGroup>
+  <Accordion title="Mini-Game 1">
+    A configured activity that challenges you to complete a quick in-game task. Success awards a bonus prize on top of your base chest loot. Difficulty and rewards are set in `minigames.yml`.
+  </Accordion>
+  <Accordion title="Mini-Game 2">
+    A different style of bonus challenge with its own mechanics and prize pool. Fully customizable in `minigames.yml` — swap the reward table without touching anything else.
+  </Accordion>
+  <Accordion title="Mini-Game 3">
+    A luck-based mini-game where the outcome is determined by a configurable random roll. Higher-tier chests can be configured to offer better odds in this game.
+  </Accordion>
+  <Accordion title="Mini-Game 4">
+    A reaction-based mini-game that rewards quick players with extra prizes. The timing window and bonus multiplier are both configurable in `minigames.yml`.
+  </Accordion>
+  <Accordion title="Mini-Game 5">
+    A choice-based mini-game that presents multiple options, each hiding a different prize. Configure the pool of options and what each one awards in `minigames.yml`.
+  </Accordion>
+</AccordionGroup>
+
+## Holograms & Animations
+
+Each chest type supports:
+
+- A **custom hologram** — floating text displayed above the chest, configurable per chest type
+- A **spawn animation** — plays when the chest first appears in the world
+- An **open animation** — plays when a player claims the chest
+
+All animations are defined in `animations.yml` and referenced by name from `loot-chests.yml`.
+
+```yaml
+# Example animations.yml snippet
+animations:
+  common-spawn:
+    frames:
+      - type: PARTICLE
+        particle: VILLAGER_HAPPY
+        count: 10
+        duration: 20
+  rare-open:
+    frames:
+      - type: PARTICLE
+        particle: FIREWORKS_SPARK
+        count: 30
+        duration: 40
+      - type: SOUND
+        ref: chest-open-rare
+```
+
+## Chest Types
+
+Configure multiple distinct chest types in `loot-chests.yml`. Each type is fully independent with its own:
+
+| Property | Description |
+|---|---|
+| `reward-table` | The pool of items/currency this chest can award |
+| `animation` | Reference to an animation in `animations.yml` |
+| `sound` | Reference to a sound in `sounds.yml` |
+| `spawn-weight` | Relative chance this chest type spawns vs. others |
+| `hologram` | The floating text lines above the chest |
+| `despawn-seconds` | How long an unclaimed chest persists |
+
+```yaml
+# Example loot-chests.yml snippet
+chest-types:
+  common:
+    display-name: "&fCommon Chest"
+    spawn-weight: 100
+    despawn-seconds: 60
+    hologram:
+      - "&f✦ Common Chest ✦"
+      - "&7Right-click to claim!"
+    animation: common-spawn
+    sound: chest-spawn-common
+    reward-table:
+      money:
+        min: 500
+        max: 2000
+      tokens:
+        min: 10
+        max: 50
+
+  legendary:
+    display-name: "&6Legendary Chest"
+    spawn-weight: 5
+    despawn-seconds: 120
+    hologram:
+      - "&6★ LEGENDARY CHEST ★"
+      - "&eRight-click to claim!"
+    animation: rare-open
+    sound: chest-spawn-legendary
+    reward-table:
+      money:
+        min: 50000
+        max: 200000
+      tokens:
+        min: 500
+        max: 2000
+```
+
+## Sounds
+
+Custom sounds for both chest spawn and chest open events are defined in `sounds.yml` and referenced by key from `loot-chests.yml`.
+
+```yaml
+# Example sounds.yml snippet
+sounds:
+  chest-spawn-common:
+    sound: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 1.0
+    pitch: 1.2
+  chest-spawn-legendary:
+    sound: UI_TOAST_CHALLENGE_COMPLETE
+    volume: 1.0
+    pitch: 0.8
+  chest-open-rare:
+    sound: ENTITY_PLAYER_LEVELUP
+    volume: 1.0
+    pitch: 1.0
+```
+
+## Configuration Files
+
+| File | Purpose |
+|---|---|
+| `plugins/JPPrison/loot-chests.yml` | Chest types, reward tables, spawn weights, and despawn timers |
+| `plugins/JPPrison/minigames.yml` | The five bonus mini-game definitions and prize tables |
+| `plugins/JPPrison/animations.yml` | Spawn and open animation frame sequences |
+| `plugins/JPPrison/sounds.yml` | Audio keys for all chest events |

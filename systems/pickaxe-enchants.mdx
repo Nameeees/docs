@@ -1,0 +1,161 @@
+---
+title: "Pickaxe Enchants System in JPPrison"
+sidebarTitle: "Pickaxe Enchants"
+description: "JPPrison includes 35 bundled pickaxe enchants with a visual upgrade menu, per-enchant unlock levels, prestige, and fully configurable YAML definitions."
+---
+
+JPPrison's pickaxe system is built around **35 data-driven enchants** — each with its own levels, upgrade costs, unlock requirements, activation effects, and an optional per-enchant prestige track. Everything is defined in YAML, so you can tune, disable, or extend any enchant without touching server code.
+
+## Enchant Categories
+
+### Break-Type Enchants (Area Mining)
+
+These enchants replace or augment the standard single-block break with multi-block effects. Each one has progressive animations, particle bursts, and full sell/XP rewards for every block destroyed.
+
+| Enchant | Effect |
+|---|---|
+| **Explosive** | Detonates a configurable-radius sphere around the target block |
+| **Nuke** | Clears a large cubic area instantly |
+| **Thunder** | Calls a lightning strike that radiates outward in a burst pattern |
+| **Meteor** | Drops a falling-block projectile that excavates on impact |
+| **Cross** | Mines a plus-shaped cross through the vein face |
+| **Layer** | Removes an entire horizontal layer at once |
+| **Solar** | Emits a radiant beam that burns through multiple layers |
+| **Frost Nova** | Freezes and shatters blocks in a widening ring |
+| **Geyser** | Erupts upward through a column of blocks |
+| **Soul Spiral** | Carves a spiral tunnel outward from the impact point |
+| **Comet** | Launches a projectile that punches through walls on impact |
+| **Volcano** | Triggers an upward eruption, clearing blocks above the strike |
+| **Blackhole** | Implodes a sphere of blocks toward a central point |
+| **Aurora** | Sweeps a curved arc through the mine face |
+| **Sandstorm** | Disperses blocks in a wide, chaotic horizontal swath |
+| **Apocalypse** | The ultimate break enchant — clears a massive area with full visual effects |
+
+### Passive & Utility Enchants
+
+These enchants apply persistent buffs and bonuses rather than triggering on each block break.
+
+| Enchant | Effect |
+|---|---|
+| **Haste** | Increases mining speed passively while the pickaxe is held |
+| **Fortune** | Multiplies block drop quantities for higher sell value |
+| **Experience** | Boosts XP earned per block mined |
+| **Sellboost** | Applies a flat sell-price multiplier to all autosell income |
+| **Token Forge** | Increases Tokens earned per block |
+| **Gem Seeker** | Increases chance of Gems dropping on mine |
+| **Lucky Break** | Random chance to trigger a bonus payout on any block |
+| **Auto-Smelt** | Smelts ore drops automatically before selling |
+| **Efficiency Aura** | Reduces the cooldown between break-type enchant activations |
+| **Scavenger** | Recovers bonus blocks from the rubble of area enchants |
+| **Overcharge** | Temporarily amplifies the next break enchant's radius |
+
+<Note>
+  The exact list of passive enchants in your server depends on your `plugins/JPPrison/enchants/` folder. Any enchant YAML file in that folder is loaded at startup — you can add, remove, or replace them freely.
+</Note>
+
+## Upgrading Enchants
+
+Players upgrade enchants directly from the pickaxe upgrade menu:
+
+1. **Right-click** the pickaxe while holding it.
+2. The upgrade GUI opens, showing every enchant with its current level, next level cost, and unlock status.
+3. Click an enchant to purchase the next level — cost is deducted immediately.
+
+Upgrade costs are configured per-enchant using a base cost and a growth multiplier. For example, if `base` is `500` tokens and `growth` is `1.15`, level 2 costs `575`, level 3 costs `661`, and so on.
+
+You can also enforce **unlock level requirements** on any enchant. A player must reach the configured `/prison` level before the enchant even appears as available in the menu. For example:
+
+> "You must reach **Level 50** before unlocking the Nuke enchant."
+
+This gates late-game power behind progression and keeps new players from skipping the early mine tiers.
+
+## Enchant Prestige
+
+Each enchant supports its own **prestige track**, independent of the global pickaxe prestige. When a player prestiges an individual enchant:
+
+- That enchant's level **resets to 1**.
+- The player pays a one-time prestige cost (configured in the enchant YAML).
+- A **permanent per-enchant multiplier bonus** is applied to that enchant's output.
+
+Enchant prestige stacks with global prestige — a fully prestiged enchant on a fully prestiged pickaxe compounds both bonuses.
+
+### Per-Enchant Prestige vs. Global Prestige
+
+| | Per-Enchant Prestige | Global Pickaxe Prestige |
+|---|---|---|
+| **Scope** | One enchant resets | Entire pickaxe level resets |
+| **Bonus** | Multiplier on that enchant's specific output | Multiplier across all economy earnings and XP |
+| **Command** | Via the pickaxe upgrade GUI | `/prison prestige` |
+| **Config location** | Each enchant's YAML file | `config.yml` |
+
+Both systems can be active simultaneously and their bonuses multiply together.
+
+## Configuring Enchants
+
+Every enchant is a standalone YAML file in `plugins/JPPrison/enchants/`. Here is an annotated example for the Explosive enchant:
+
+```yaml
+id: explosive
+name: "Explosive"
+max-level: 100
+unlock-level: 1       # Prison level required to unlock this enchant
+costs:
+  type: tokens        # Economy used for upgrade costs
+  base: 500           # Cost at level 1
+  growth: 1.15        # Each level multiplies cost by this factor
+prestige:
+  max: 10             # Maximum prestige tiers for this enchant
+  cost: 50000         # Token cost to prestige (at prestige tier 1)
+  multiplier-per-prestige: 0.1   # +10% bonus per prestige tier
+effects:
+  particle: EXPLOSION_LARGE
+  sound: ENTITY_GENERIC_EXPLODE
+  message: "&c💥 Explosive activated!"
+```
+
+| Field | Description |
+|---|---|
+| `id` | Unique identifier — must match the filename |
+| `max-level` | Highest level a player can upgrade this enchant to |
+| `unlock-level` | Minimum prison level before this enchant is available |
+| `costs.type` | Economy ID to draw upgrade costs from |
+| `costs.base` | Token cost for level 1 upgrade |
+| `costs.growth` | Exponential cost multiplier per level |
+| `prestige.max` | Maximum number of times this enchant can be prestiged |
+| `prestige.cost` | Currency cost to prestige this enchant |
+| `prestige.multiplier-per-prestige` | Bonus multiplier added per prestige tier |
+
+## Adding Custom Enchants
+
+You can add entirely new enchants without recompiling the plugin:
+
+1. Create a new `.yml` file in `plugins/JPPrison/enchants/` (e.g., `mythic.yml`).
+2. Define all required fields (`id`, `name`, `max-level`, `costs`, etc.).
+3. Run `/jpprison reload`.
+
+Your new enchant appears in every player's pickaxe upgrade menu immediately. There is no limit on the number of enchants you can define.
+
+<Warning>
+  Each `id` must be globally unique across all enchant files. Duplicate IDs cause the second file to be silently skipped on load — check the console for warnings after reloading.
+</Warning>
+
+## Activation Effects & Messages
+
+Every enchant can define visual and audio feedback that triggers each time the enchant activates during mining:
+
+```yaml
+effects:
+  particle: EXPLOSION_LARGE       # Bukkit particle name
+  sound: ENTITY_GENERIC_EXPLODE   # Bukkit sound name
+  message: "&c💥 Explosive activated!"
+```
+
+- **`particle`** — plays the named Bukkit particle effect at the activation point.
+- **`sound`** — plays the named Bukkit sound at the player's location.
+- **`message`** — sends a color-formatted chat message to the activating player.
+
+All three fields are optional. Remove any field to disable that feedback element for that enchant.
+
+## Earnings Board
+
+Run `/earn` to open a live per-enchant earnings breakdown. The board shows exactly how much income each of your enchants has generated this session, letting you identify which enchants are driving the most value and where to invest your next upgrade.

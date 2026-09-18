@@ -1,0 +1,82 @@
+---
+title: "Momentum: Combo Multipliers for Non-Stop Mining"
+sidebarTitle: "Momentum"
+description: "Build a combo multiplier by mining without stopping in JPPrison. Reach milestone combos for bonus rewards and celebrations. Stop mining and the combo resets."
+---
+
+Momentum rewards non-stop mining with a combo multiplier. The longer you mine without pausing, the higher your multiplier grows — boosting all economy earnings and XP until you stop. It's a simple mechanic with a powerful payoff: stay in the zone and the prison pays you back for it.
+
+## How Combos Work
+
+<Steps>
+  <Step title="Start Mining">
+    Every block you break increments your combo counter by 1. Your multiplier begins scaling immediately from the first block.
+  </Step>
+  <Step title="Keep the Chain Going">
+    Your combo multiplier scales with the counter — the higher your block count, the stronger the boost applied to all autosell earnings and XP.
+  </Step>
+  <Step title="Don't Stop">
+    If you stop mining for longer than the configured reset timeout (default: 5 seconds), your combo resets back to **1×**. Even a brief pause costs you the entire chain.
+  </Step>
+  <Step title="Hit Milestones">
+    Reaching configured milestone combo counts triggers celebrations and awards bonus payouts — keep pushing toward the next milestone for extra rewards.
+  </Step>
+</Steps>
+
+## Milestone Celebrations
+
+When you reach a configured milestone combo count (for example, 100, 500, or 1000 blocks mined in a row), Momentum triggers a celebration:
+
+- A **chat announcement** broadcasts your achievement to the server (if enabled)
+- **Particle effects** fire around your character
+- A **bonus reward payout** is deposited directly — extra money, tokens, or whatever your server has configured
+
+Milestone thresholds, announcements, and bonus values are all defined in `config.yml` under the `momentum` section.
+
+<Info>
+  Milestones are one-time-per-session events — reaching 100 blocks fires the 100-block milestone once, but it won't fire again until your combo resets and you reach 100 again.
+</Info>
+
+## Viewing Your Combo
+
+Your current combo counter and active multiplier are displayed **on-screen at all times** while mining. Depending on your server's configuration this appears as:
+
+- An **actionbar message** below your hotbar (default)
+- A **scoreboard line** on the side of your screen
+
+You can also check your current multiplier at any time via `/prison` or by looking at the lore on your pickaxe, which updates dynamically.
+
+## Configuration
+
+Add or edit the `momentum` block in `plugins/JPPrison/config.yml`:
+
+```yaml
+momentum:
+  enabled: true
+  reset-timeout-seconds: 5
+  milestones:
+    - combo: 100
+      bonus-multiplier: 0.1
+      announce: true
+    - combo: 500
+      bonus-multiplier: 0.25
+      announce: true
+    - combo: 1000
+      bonus-multiplier: 0.50
+      announce: true
+    - combo: 5000
+      bonus-multiplier: 1.00
+      announce: true
+```
+
+| Option | Description |
+|---|---|
+| `enabled` | Turn Momentum on or off globally |
+| `reset-timeout-seconds` | Seconds of inactivity before the combo resets |
+| `milestones[].combo` | Block count that triggers this milestone |
+| `milestones[].bonus-multiplier` | Extra multiplier awarded at this milestone |
+| `milestones[].announce` | Whether to broadcast the milestone to the whole server |
+
+<Tip>
+  Combine Momentum with Timed Boosts and Pets for maximum earnings during long mining sessions. A high combo multiplier stacks with pet economy boosts and active timed boosts — the three systems together can multiply your baseline earnings several times over.
+</Tip>
