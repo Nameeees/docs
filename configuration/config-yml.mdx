@@ -1,7 +1,7 @@
 ---
-title: "config.yml Reference for JPPrison"
+title: "config.yml Reference Guide for JPPrison Server Owners"
 sidebarTitle: "config.yml"
-description: "Reference for JPPrison's main config.yml file. Controls the pickaxe XP curve, prestige costs, timed boosts, Vault settings, feature flags, and backup schedule."
+description: "Complete reference for JPPrison's config.yml. Covers the pickaxe XP curve, prestige, timed boosts, Vault, feature flags, and backup schedule."
 ---
 
 `config.yml` is the master control file for JPPrison. It governs the pickaxe leveling curve, prestige system, timed boosts, Vault economy bridge, automatic backups, and global feature flags.
@@ -49,6 +49,25 @@ prestige:
 | `cost.growth` | Decimal | Multiplier applied to cost each subsequent prestige |
 | `multiplier-per-prestige` | Decimal | XP/sell multiplier bonus awarded per prestige level |
 | `max-multiplier` | Decimal | Upper cap on the total accumulated multiplier |
+
+## Timed Boosts
+
+The `boosts` block configures server-wide timed multipliers that can be activated by players or staff. Boosts temporarily multiply XP gains and/or sell prices for all online players.
+
+```yaml
+boosts:
+  enabled: true
+  max-duration-minutes: 60
+  default-multiplier: 2.0
+  stack: false           # false = new boost replaces the active one
+```
+
+| Key | Type | Description |
+|---|---|---|
+| `enabled` | Boolean | Enables the timed boost system globally |
+| `max-duration-minutes` | Integer | Maximum duration (in minutes) a single boost may run |
+| `default-multiplier` | Decimal | Multiplier applied to XP and sell payouts while a boost is active |
+| `stack` | Boolean | When `true`, new boosts add on top of an existing active boost; when `false`, the latest boost replaces the current one |
 
 ## Vault Integration
 

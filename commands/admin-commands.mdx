@@ -1,5 +1,5 @@
 ---
-title: "JPPrison Admin Commands Reference"
+title: "JPPrison Admin Commands — Complete Reference Guide"
 sidebarTitle: "Admin Commands"
 description: "Full reference for JPPrison admin commands. Requires jpprison.admin (op by default). Covers reload, giving items, economy management, and diagnostics."
 ---
@@ -12,7 +12,7 @@ Admin commands require the `jpprison.admin` permission, which defaults to op. Us
 |---|---|
 | `/jpprison` or `/jp` | Show the admin help menu |
 | `/jpprison reload` | Reload all configs, messages, economies, and menus |
-| `/jpprison backup` | Create an immediate backup of the database and configs |
+| `/jpprison backup` | Create an immediate backup now |
 | `/jpprison announce <message>` | Broadcast a message to all online players |
 
 ## Economy & Balance
@@ -36,7 +36,7 @@ Admin commands require the `jpprison.admin` permission, which defaults to op. Us
 | Command | Description |
 |---|---|
 | `/xpboost <player\|global> <multiplier> <time>` | Grant a timed XP boost. Use `global` for all players |
-| `/<economy> boost <player\|global> <multiplier> <time>` | Grant a timed economy boost |
+| `/<economy> <player\|global> <mult> <time>` | Grant a timed economy boost |
 | `/jpprison boost <player>` | View a player's active boost breakdown |
 
 **Time format examples:** `30s`, `10m`, `2:30m`, `2h`, `1d`
@@ -45,7 +45,7 @@ Admin commands require the `jpprison.admin` permission, which defaults to op. Us
 ```
 /xpboost Steve 2x 1h
 /xpboost global 1.5x 30m
-/tokens boost Steve 3x 2h
+/tokens Steve 3x 2h
 /jpprison boost Steve
 ```
 
@@ -55,13 +55,13 @@ Admin commands require the `jpprison.admin` permission, which defaults to op. Us
 |---|---|
 | `/jpprison orb give <player> <xp> [count]` | Give XP orb items |
 | `/jpprison remnant give <player> <enchant> <levels> [count]` | Give enchant remnant items |
-| `/jpprison shard give <player> <shard-id> [count]` | Give shard items |
-| `/jpprison rune give <player> <rune-id> [count]` | Give rune items |
-| `/jpprison bomb give <player> [type] [count]` | Give bomb items |
-| `/jpprison drill give <player> [type] [count]` | Give drill items |
+| `/jpprison shard give <player> <shard> [count]` | Give shard items |
+| `/jpprison rune give <player> <rune> [count]` | Give rune items |
+| `/jpprison bomb give <player> [bomb] [count]` | Give bomb items |
+| `/jpprison drill give <player> [drill] [count]` | Give drill items |
 | `/jpprison autominer give <player> <time>` | Give autominer time |
-| `/jpprison minion give <player> <type> <time> [count]` | Give minion time items |
-| `/pets give <player> <pet-id>` | Give a pet unlock item |
+| `/jpprison minion give <player> <minion> <time> [count]` | Give minion time items |
+| `/pets give <player> <pet>` | Give a pet unlock item |
 
 **Examples:**
 ```

@@ -1,5 +1,5 @@
 ---
-title: "Customizing JPPrison Menus in menus/"
+title: "Customizing JPPrison GUI Menus in the menus/ Folder"
 sidebarTitle: "Menus Config"
 description: "All JPPrison GUI menus are defined in YAML files inside the menus/ folder. Adjust titles, layouts, item materials, lore, and button actions."
 ---
@@ -33,6 +33,38 @@ items:
 | `items.<key>.material` | String | Bukkit Material name for the item's icon. |
 | `items.<key>.name` | String | Item display name. Supports `&` color codes and `{placeholders}`. |
 | `items.<key>.lore` | List | Lines of item lore. Each entry is one line. Supports color codes and placeholders. |
+
+## Button Actions
+
+Each item entry can include an `actions` list that defines what happens when a player clicks the button. Actions are executed in order.
+
+```yaml
+items:
+  close-button:
+    slot: 49
+    material: BARRIER
+    name: "&cClose"
+    lore:
+      - "&7Click to close this menu."
+    actions:
+      - type: CLOSE
+  warp-button:
+    slot: 20
+    material: ENDER_PEARL
+    name: "&bWarp to Mine"
+    lore:
+      - "&7Teleports you to the mine."
+    actions:
+      - type: COMMAND
+        value: "warp mine"
+```
+
+| Action type | Description |
+|---|---|
+| `CLOSE` | Closes the inventory immediately. No additional fields required. |
+| `COMMAND` | Runs `value` as a player command (without the leading `/`). |
+| `OPEN` | Opens another JPPrison menu. Set `value` to the target menu filename (without `.yml`). |
+| `MESSAGE` | Sends `value` as a chat message to the player. Supports color codes. |
 
 ## Available Placeholders
 
